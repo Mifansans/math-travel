@@ -1,0 +1,22 @@
+# LaTeX 编译辅助文件
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.xdv
+*.dvi
+
+# 编辑器/系统文件
+.vscode/
+.DS_Store
+Thumbs.db
+
+# LaTeX Workshop 输出目录
+out/
