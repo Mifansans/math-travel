@@ -1,13 +1,17 @@
 \documentclass[UTF8]{ctexart}
 
-\usepackage{amsmath, amssymb, amsthm}
+\usepackage{amsmath, amssymb, amsthm, mathtools}
 \usepackage{geometry}
 \geometry{a4paper, margin=2.5cm}
 \usepackage{hyperref}
+\usepackage{graphicx}
 
+% 定理环境
 \newtheorem{theorem}{定理}[section]
-\newtheorem{definition}[theorem]{定义}
 \newtheorem{lemma}[theorem]{引理}
+\newtheorem{corollary}[theorem]{推论}
+\newtheorem{definition}[theorem]{定义}
+\newtheorem{example}[theorem]{例}
 
 \title{数学笔记}
 \author{Mifansans}
@@ -17,27 +21,9 @@
 \maketitle
 \tableofcontents
 
-\section{微积分}
-
-\subsection{高斯积分}
-
-\begin{theorem}[高斯积分]
-\[
-\int_{-\infty}^{+\infty} e^{-x^2}\,dx = \sqrt{\pi}.
-\]
-\label{thm:gauss}
-\end{theorem}
-
-\begin{proof}
-考虑二重积分
-\[
-\left(\int_{-\infty}^{+\infty} e^{-x^2}\,dx\right)^2
-=
-\iint_{\mathbb{R}^2} e^{-(x^2+y^2)}\,dx\,dy,
-\]
-再使用极坐标变换即可。
-\end{proof}
-
-由定理 \ref{thm:gauss} 可知该积分收敛。
+\include{chapters/advanced-algebra}
+\include{chapters/analysis}
+\include{chapters/complex-analysis}
+\include{chapters/geometry}
 
 \end{document}

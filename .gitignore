@@ -20,3 +20,5 @@ Thumbs.db
 
 # LaTeX Workshop 输出目录
 out/
+*.pdf
+*.pdf
