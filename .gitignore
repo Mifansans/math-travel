@@ -21,4 +21,6 @@ Thumbs.db
 # LaTeX Workshop 输出目录
 out/
 *.pdf
-*.pdf
+
+# 权限修复的备份与报告（本地目录，不提交）
+acl-recovery/

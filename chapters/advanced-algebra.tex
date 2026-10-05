@@ -1,110 +1,129 @@
 \section{高等代数}
 
-\subsection{一元和n元多项式环}
+\subsection{一元多项式环}
 
-\subsubsection{一元多项式环}
+\subsubsection{基本概念：环、零因子、整环}
 
 \begin{definition}[环]
-设 \(R\) 是一个非空集合，在 \(R\) 上定义了加法 \(+\) 和乘法 \(\cdot\)。若满足：
+设 \(R\) 是一个非空集合，在 \(R\) 上定义了加法 \(+\) 和乘法 \(\cdot\)。若下列条件全部成立：
 \begin{enumerate}[label=(\arabic*)]
-  \item \((R,+)\) 是交换幺群，即
+  \item \((R,+)\) 是交换群，即
   \[
-  a+b=b+a,\qquad (a+b)+c=a+(b+c),
+  a+b=b+a,\qquad (a+b)+c=a+(b+c)\qquad(\forall a,b,c\in R),
   \]
-  存在零元 \(0\in R\)，使 \(a+0=a\)，且每个 \(a\in R\) 有负元 \(-a\)，使 \(a+(-a)=0\)；
+  存在零元 \(0\in R\) 使 \(a+0=a\)（\(\forall a\in R\)），且每个 \(a\in R\) 都有负元 \(-a\in R\) 使 \(a+(-a)=0\)；
   \item 乘法满足结合律
   \[
-  (ab)c=a(bc),\qquad \forall a,b,c\in R;
+  (ab)c=a(bc)\qquad(\forall a,b,c\in R);
   \]
   \item 乘法对加法满足左右分配律
   \[
-  a(b+c)=ab+ac,\qquad (a+b)c=ac+bc;
+  a(b+c)=ab+ac,\qquad (a+b)c=ac+bc\qquad(\forall a,b,c\in R),
   \]
 \end{enumerate}
-则称 \(R\) 为一个环。
+则称 \(R\)（确切地说，称 \((R,+,\cdot)\)）为一个环。
 \end{definition}
 
-\begin{definition}[交换环、幺环、零环]
+\noindent\textbf{注.} 有的教材把“有单位元的交换群”称为\emph{交换幺群}。对加法群而言单位元就是零元，所以“\((R,+)\) 是交换幺群”与“\((R,+)\) 是交换群”是同一件事；下文统一使用“交换群”。
+
+\begin{proposition}[环中的基本恒等式]
+设 \(R\) 是环，则对任意 \(a,b\in R\) 有
 \begin{enumerate}[label=(\arabic*)]
-  \item 若乘法满足交换律 \(ab=ba\)，则称 \(R\) 为交换环。
-  \item 若存在乘法单位元 \(1\in R\)，使 \(1a=a1=a\)，则称 \(R\) 为幺环。
-  \item 若 \(1=0\)，则 \(R\) 中只有一个元素 \(0\)，称为零环。
+  \item \(0a=a0=0\)；
+  \item \((-a)b=a(-b)=-ab\)。
+\end{enumerate}
+\end{proposition}
+
+\begin{proof}
+(1) 由分配律
+\[
+0a=(0+0)a=0a+0a .
+\]
+在加法群 \((R,+)\) 中两边同时加上 \(-0a\)，得 \(0a=0\)。同理，由 \(a0=a(0+0)=a0+a0\) 得 \(a0=0\)。
+
+(2) 由 (1) 与分配律
+\[
+ab+(-a)b=\bigl(a+(-a)\bigr)b=0b=0,
+\]
+故 \((-a)b=-ab\)；同理 \(ab+a(-b)=a\bigl(b+(-b)\bigr)=a0=0\)，故 \(a(-b)=-ab\)。
+\end{proof}
+
+\begin{definition}[交换环、幺环、零环]
+设 \(R\) 为环。
+\begin{enumerate}[label=(\arabic*)]
+  \item 若乘法满足交换律，即 \(ab=ba\)（\(\forall a,b\in R\)），则称 \(R\) 为交换环；
+  \item 若存在 \(1\in R\)，使 \(1a=a1=a\)（\(\forall a\in R\)），则称 \(R\) 为幺环，称 \(1\) 为 \(R\) 的幺元（单位元）。幺元是唯一的：若 \(1,1'\) 都是幺元，则 \(1=1\cdot1'=1'\)；
+  \item 设 \(R\) 是幺环。若 \(1=0\)，则由上一命题 \(a=1a=0a=0\)（\(\forall a\in R\)），故 \(R\) 中只有一个元素 \(0\)，此时称 \(R\) 为零环。
 \end{enumerate}
 \end{definition}
 
 \begin{definition}[零因子]
 设 \(R\) 为环，\(a\in R\)。
 \begin{enumerate}[label=(\arabic*)]
-  \item 若 \(a\ne 0\)，且存在 \(b\ne 0\)，使 \(ab=0\)，则称 \(a\) 为左零因子。
-  \item 若 \(a\ne 0\)，且存在 \(b\ne 0\)，使 \(ba=0\)，则称 \(a\) 为右零因子。
-  \item 在交换环中，左零因子与右零因子统称为零因子。
-  \item \(0\) 本身有时称为平凡零因子；通常零因子定义中要求 \(a\ne 0\)，非零零因子称为非平凡零因子。
+  \item 若 \(a\ne0\)，且存在 \(b\ne0\) 使 \(ab=0\)，则称 \(a\) 为 \(R\) 的一个左零因子；
+  \item 若 \(a\ne0\)，且存在 \(b\ne0\) 使 \(ba=0\)，则称 \(a\) 为 \(R\) 的一个右零因子；
+  \item 若 \(R\) 是交换环，则左零因子与右零因子是同一个概念，统称为零因子。
 \end{enumerate}
+按上面的定义，\(0\) 本身不算零因子。在不作这一区分、或把 \(0\) 也计入的场合，常称 \(0\) 为平凡零因子，而称非零的零因子为非平凡零因子。
 \end{definition}
+
+\noindent\textbf{注.} 由 \(0b=0\) 可见 \(0\) 对任何 \(b\ne0\) 都满足“乘积为 \(0\)”，这正是通常把 \(0\) 排除在零因子之外的原因。在幺环中再加上条件 \(1\ne0\)，就排除了只有一个元素的退化情形。
 
 \begin{definition}[整环]
-若 \(R\) 是交换幺环，且 \(1\ne 0\)，并且 \(R\) 没有零因子，则称 \(R\) 为整环。
+设 \(R\) 是交换幺环。若 \(1\ne0\)，且 \(R\) 没有零因子（即不存在 \(a,b\in R\)，\(a,b\ne0\)，使 \(ab=0\)），则称 \(R\) 为整环。
 \end{definition}
+
+\noindent\textbf{注.} 整环中成立消去律：若 \(a\ne0\) 且 \(ab=ac\)，则 \(a(b-c)=0\)，由无零因子得 \(b-c=0\)，即 \(b=c\)。
+
+\subsubsection{子环与扩环}
 
 \begin{definition}[子环]
-设 \(S\) 是环 \(R\) 的非空子集。若 \(S\) 在 \(R\) 的加法与乘法下也构成环，则称 \(S\) 为 \(R\) 的子环。
+设 \(S\) 是环 \(R\) 的非空子集。若 \(S\) 在 \(R\) 的加法与乘法下也构成一个环，则称 \(S\) 为 \(R\) 的子环。
 \end{definition}
 
-\begin{theorem}[子环判定]
-设 \(S\) 是环 \(R\) 的非空子集。则 \(S\) 是 \(R\) 的子环，当且仅当 \(S\) 对减法和乘法封闭，即
+\begin{theorem}[子环的判定]
+设 \(S\) 是环 \(R\) 的非空子集。则 \(S\) 是 \(R\) 的子环，当且仅当 \(S\) 对减法与乘法封闭，即
 \[
-a,b\in S\implies a-b\in S,\qquad ab\in S.
+a,b\in S\implies a-b\in S,\qquad ab\in S .
 \]
 \end{theorem}
 
 \begin{proof}
-必要性显然。下证充分性。
+\textbf{必要性.} 若 \(S\) 是子环，则 \((S,+)\) 是群：\(0\in S\)，且由 \(b\in S\) 得 \(-b\in S\)，于是 \(a-b=a+(-b)\in S\)；又 \(S\) 对乘法封闭，故 \(ab\in S\)。
 
-由 \(S\ne\varnothing\)，取 \(a\in S\)。由减法封闭，
-\[
-a-a=0\in S.
-\]
-又对任意 \(a\in S\)，
-\[
-0-a=-a\in S.
-\]
-于是 \(S\) 对加法封闭：
-\[
-a+b=a-(-b)\in S.
-\]
-结合律、交换律、分配律从 \(R\) 继承。因此 \(S\) 是环，从而是子环。
+\textbf{充分性.} 设 \(S\ne\varnothing\)，且对任意 \(a,b\in S\) 有 \(a-b\in S\)、\(ab\in S\)。
+\begin{enumerate}[label=(\arabic*)]
+  \item 取 \(a\in S\)，由减法封闭得 \(0=a-a\in S\)；
+  \item 对任意 \(b\in S\)，由减法封闭得 \(-b=0-b\in S\)；
+  \item 对任意 \(a,b\in S\)，由 (2) 得 \(-b\in S\)，再由减法封闭得 \(a+b=a-(-b)\in S\)。
+\end{enumerate}
+于是加法与乘法都是 \(S\times S\to S\) 的运算，且由 (1)(2)(3) 知 \((S,+)\) 是交换群。结合律、交换律、分配律在 \(R\) 中成立，限制在 \(S\) 上仍然成立，故 \(S\) 本身是一个环，从而是 \(R\) 的子环。
 \end{proof}
 
 \begin{theorem}[子环的零元与负元]
-设 \(S\) 是环 \(R\) 的子环。则：
+设 \(S\) 是环 \(R\) 的子环，\(0_S\)、\(0_R\) 分别是 \(S\)、\(R\) 的零元。则
 \begin{enumerate}[label=(\arabic*)]
-  \item \(S\) 的零元等于 \(R\) 的零元；
-  \item 若 \(a\in S\)，则 \(a\) 在 \(S\) 中的负元等于它在 \(R\) 中的负元。
+  \item \(0_S=0_R\)；
+  \item 若 \(a\in S\)，则 \(a\) 在 \(S\) 中的负元等于 \(a\) 在 \(R\) 中的负元。
 \end{enumerate}
 \end{theorem}
 
 \begin{proof}
-设 \(0_S\) 为 \(S\) 的零元，\(0_R\) 为 \(R\) 的零元。在 \(S\) 中
+(1) 因为 \(0_S\in S\subseteq R\)，所以它既是 \(S\) 的零元，在 \(R\) 中又与 \(0_R\) 起同样的作用：
 \[
-0_S+0_S=0_S.
+0_S+0_S=0_S,\qquad 0_S+0_R=0_S .
 \]
-在 \(R\) 中同样有
+于是 \(0_S+0_S=0_S+0_R\)。在加法群 \((R,+)\) 中两边同时加上 \(-0_S\)，得 \(0_S=0_R\)。
+
+(2) 记 \(a\) 在 \(S\)、\(R\) 中的负元分别为 \((-a)_S\)、\((-a)_R\)，则由 (1)
 \[
-0_S+0_R=0_S.
+a+(-a)_S=0_S=0_R=a+(-a)_R .
 \]
-由加法消去律得
-\[
-0_S=0_R.
-\]
-负元同理：若 \(a\in S\)，设 \(a\) 在 \(S\) 中的负元为 \(-a_S\)，在 \(R\) 中的负元为 \(-a_R\)，则
-\[
-a+(-a_S)=0,\qquad a+(-a_R)=0.
-\]
-由加法消去律得 \(-a_S=-a_R\)。
+在 \((R,+)\) 中两边同时加上 \(-a\)，得 \((-a)_S=(-a)_R\)。
 \end{proof}
 
 \begin{definition}[扩环]
-若 \(R\) 是 \(S\) 的子环，则称 \(S\) 为 \(R\) 的扩环。
+设 \(S\) 是环 \(R\) 的子环，则称 \(R\) 为 \(S\) 的扩环；若 \(R\) 还是交换环（幺环），则称 \(R\) 为 \(S\) 的交换扩环（幺扩环）。
 \end{definition}
 
 \begin{theorem}[多项式环是基环的扩环]
@@ -112,258 +131,401 @@ a+(-a_S)=0,\qquad a+(-a_R)=0.
 \[
 \varphi:K\longrightarrow K[x],\qquad a\longmapsto a
 \]
-把 \(a\) 映为常数多项式 \(a\)。则 \(\varphi\) 是单射，并且保持加法与乘法：
-\[
-\varphi(a+b)=\varphi(a)+\varphi(b),\qquad
-\varphi(ab)=\varphi(a)\varphi(b).
-\]
-因此 \(K\) 同构于 \(K[x]\) 中的常数多项式子环，\(K[x]\) 是 \(K\) 的扩环。
+把 \(a\) 映为常数多项式 \(a\)。则
+\begin{enumerate}[label=(\arabic*)]
+  \item \(\varphi\) 保持加法与乘法：
+  \[
+  \varphi(a+b)=\varphi(a)+\varphi(b),\qquad
+  \varphi(ab)=\varphi(a)\varphi(b),\qquad
+  \varphi(1)=1;
+  \]
+  \item \(\varphi\) 是单射；
+  \item \(\operatorname{Im}\varphi\) 是 \(K[x]\) 的子环，且 \(K\cong\operatorname{Im}\varphi\)；\(\operatorname{Im}\varphi\) 恰由 \(K[x]\) 中所有的常数多项式与零多项式组成。
+\end{enumerate}
+因此 \(K[x]\) 可看作 \(K\) 的扩环：通常把 \(a\in K\) 与常数多项式 \(a\in K[x]\) 等同起来，把 \(K\) 看成 \(K[x]\) 的子环。
 \end{theorem}
 
-\begin{definition}[多项式的次数]
+\begin{proof}
+(1) 常数多项式的加法与乘法就是数的加法与乘法，故三式成立。
+
+(2) 若 \(\varphi(a)=\varphi(b)\)，即常数多项式 \(a\) 与 \(b\) 相等，则 \(a=b\)。
+
+(3) 由 (1) 得 \(\varphi(0)=0\)，并且 \(\varphi(a)+\varphi(-a)=\varphi(0)=0\)，即 \(\varphi(-a)=-\varphi(a)\)。于是对 \(a,b\in K\)
+\[
+\varphi(a)-\varphi(b)=\varphi(a-b)\in\operatorname{Im}\varphi,\qquad
+\varphi(a)\varphi(b)=\varphi(ab)\in\operatorname{Im}\varphi,
+\]
+即 \(\operatorname{Im}\varphi\) 非空且对减法与乘法封闭，由子环的判定知它是 \(K[x]\) 的子环。又 \(\varphi\) 是 \(K\) 到 \(\operatorname{Im}\varphi\) 的满射，结合 (2) 得 \(K\cong\operatorname{Im}\varphi\)。最后，\(\operatorname{Im}\varphi\) 中的元素恰为形如 \(a\) 的常数多项式以及零多项式 \(0\)。
+\end{proof}
+
+\noindent\textbf{注（\(\varphi\) 不是双射）.} 例如 \(x\in K[x]\) 不是常数多项式，故 \(x\notin\operatorname{Im}\varphi\)，即 \(\varphi\) 不是满射。所以正确的说法是：\(\varphi\) 是\emph{单射}同态，它把 \(K\) 嵌入 \(K[x]\)，使 \(K[x]\) 成为 \(K\) 的扩环；把 \(\varphi\) 说成“双射”是不对的。
+
+\subsubsection{多项式的次数}
+
+\begin{definition}[次数]
 设
 \[
-f(x)=a_nx^n+\cdots+a_1x+a_0,\qquad a_n\ne 0.
+f(x)=a_nx^n+a_{n-1}x^{n-1}+\cdots+a_1x+a_0,\qquad a_n\ne0,
 \]
 称 \(n\) 为 \(f(x)\) 的次数，记作
 \[
-\deg f=n.
+\deg f=n .
 \]
-零多项式记作 \(0\)，规定
+零多项式 \(0\) 的次数规定为
 \[
-\deg 0=-\infty.
+\deg 0=-\infty .
 \]
+为使下面的公式对零多项式也有意义，再约定（\(k\) 为任意非负整数）
+\[
+-\infty<k,\qquad -\infty+k=-\infty,\qquad \max\{-\infty,k\}=k,\qquad \max\{-\infty,-\infty\}=-\infty .
+\]
+此外约定：多项式中下标为负的系数都为 \(0\)。
 \end{definition}
 
-\begin{proposition}[次数与加法]
-设 \(f,g\in K[x]\)。则
+\begin{proposition}[加法的次数]
+设 \(f,g\in K[x]\)，则
 \[
-\deg(f+g)\le \max\{\deg f,\deg g\}.
+\deg(f+g)\le\max\{\deg f,\deg g\}.
 \]
-若 \(\deg f\ne \deg g\)，则
+若 \(\deg f\ne\deg g\)，则
 \[
 \deg(f+g)=\max\{\deg f,\deg g\}.
 \]
 \end{proposition}
 
-\begin{proposition}[次数与乘法]
-设 \(f,g\in K[x]\)。则
+\begin{proof}
+若 \(f=0\) 或 \(g=0\)，结论由约定直接得到。下设 \(f,g\ne0\)，记
 \[
-\deg(fg)\le \deg f+\deg g.
+\deg f=m,\qquad \deg g=k,\qquad a_m\ne0,\qquad b_k\ne0,
 \]
-若 \(K\) 是整环，且 \(f\ne 0\)，\(g\ne 0\)，则
+其中 \(a_m\)、\(b_k\) 分别是 \(f\)、\(g\) 的最高次项系数。不妨设 \(m\ge k\)。\(f+g\) 中 \(x^i\)（\(i>m\)）的系数为 \(0\)，故 \(\deg(f+g)\le m=\max\{\deg f,\deg g\}\)。若 \(m>k\)，则 \(g\) 中 \(x^m\) 的系数为 \(0\)，于是 \(f+g\) 中 \(x^m\) 的系数为 \(a_m\ne0\)，故 \(\deg(f+g)=m\)。
+\end{proof}
+
+\noindent\textbf{注.} 当 \(\deg f=\deg g\) 时，次数可能严格变小：例如 \(f=x+1\)，\(g=-x+1\)，则 \(f+g=2\)，\(\deg(f+g)=0<1=\max\{\deg f,\deg g\}\)。
+
+\begin{proposition}[乘法的次数]
+设 \(f,g\in K[x]\)，则
 \[
-\deg(fg)=\deg f+\deg g.
+\deg(fg)\le\deg f+\deg g .
 \]
-特别地，在数域 \(K\) 上，
+若 \(f\ne0\)，\(g\ne0\)，则
 \[
-\deg(fg)=\deg f+\deg g\qquad (f,g\ne 0).
+\deg(fg)=\deg f+\deg g .
 \]
 \end{proposition}
 
+\begin{proof}
+若 \(f=0\) 或 \(g=0\)，则 \(fg=0\)，两边都是 \(-\infty\)。下设 \(f,g\ne0\)，记
+\[
+f=\sum_{i=0}^{m}a_ix^i,\quad a_m\ne0,\qquad g=\sum_{i=0}^{k}b_ix^i,\quad b_k\ne0 .
+\]
+对 \(i>m+k\)，\(fg\) 中 \(x^i\) 的系数为
+\[
+\sum_{j}a_jb_{i-j},
+\]
+其中每一项都有 \(a_j=0\)（当 \(j>m\)）或 \(b_{i-j}=0\)（当 \(i-j>k\)，而当 \(i-j<0\) 时按约定系数也是 \(0\)）：否则 \(j>m\) 且 \(i-j>k\)，相加得 \(i>m+k\)，与 \(i\le m+k\) 矛盾。故 \(\deg(fg)\le m+k=\deg f+\deg g\)。
+
+另一方面，\(fg\) 中 \(x^{m+k}\) 的系数为 \(a_mb_k\)。因为 \(K\) 是数域，由 \(a_m\ne0\)、\(b_k\ne0\) 得 \(a_mb_k\ne0\)，故 \(\deg(fg)=m+k\)。
+\end{proof}
+
+\noindent\textbf{注.} 第二个等式只用到“非零元的乘积非零”，即只要求系数环是整环；数域当然是整环。
+
 \begin{corollary}[多项式环无零因子]
-在 \(K[x]\) 中，若
+设 \(f,g\in K[x]\)。若
 \[
 fg=0,
 \]
 则
 \[
-f=0\quad\text{或}\quad g=0.
+f=0\quad\text{或}\quad g=0 .
 \]
 \end{corollary}
 
 \begin{proof}
-反设 \(f\ne 0\) 且 \(g\ne 0\)。则
+我们证明它的\textbf{逆否命题}：
 \[
-\deg(fg)=\deg f+\deg g\ge 0,
+f\ne0\ \text{且}\ g\ne0\ \Longrightarrow\ fg\ne0 .
 \]
-所以 \(fg\ne 0\)，矛盾。
+事实上，此时由乘法的次数得
+\[
+\deg(fg)=\deg f+\deg g\ge0,
+\]
+而 \(\deg0=-\infty<0\)，故 \(fg\ne0\)。
 \end{proof}
 
 \begin{corollary}[消去律]
-设 \(f,g,h\in K[x]\)，且 \(f\ne 0\)。若
+设 \(f,g,h\in K[x]\)，且 \(f\ne0\)。若
 \[
 fg=fh,
 \]
 则
 \[
-g=h.
+g=h .
 \]
 \end{corollary}
 
 \begin{proof}
-由 \(fg=fh\)，得
-\[
-f(g-h)=0.
-\]
-因为 \(f\ne 0\)，且 \(K[x]\) 无零因子，所以
-\[
-g-h=0,
-\]
-即 \(g=h\)。
+由分配律 \(f(g-h)=fg-fh=0\)。由上一推论，\(f=0\) 或 \(g-h=0\)；已知 \(f\ne0\)，故 \(g-h=0\)，即 \(g=h\)。
 \end{proof}
 
+\noindent\textbf{注.} 这里起作用的是\textbf{消去律}，而不是“除法”：\(K[x]\) 不是域。例如 \(x\) 不可逆：若存在 \(q\in K[x]\) 使 \(xq=1\)，则 \(q\ne0\)，由乘法的次数得 \(1+\deg q=\deg(xq)=\deg1=0\)，与 \(\deg q\ge0\) 矛盾。消去律之所以成立，根据在于 \(K[x]\) 没有零因子。
 
+\subsubsection{常用结论汇总}
+
+\noindent 下面把常用结论集中列出并给出证明：前几条是环与整数的基本性质，中间几条是多项式次数的直接推论，最后三条来自矩阵与行列式部分，一并列在这里备用。
+
+\begin{proposition}[逆元唯一]
+设 \(R\) 是幺环，\(a,b,c\in R\)。若
+\[
+ba=1,\qquad ac=1,
+\]
+则 \(b=c\)。特别地，若 \(a\) 可逆，则 \(a\) 的逆元唯一，记作 \(a^{-1}\)。
+\end{proposition}
+
+\begin{proof}
+由结合律与幺元的性质，
+\[
+b=b\cdot1=b(ac)=(ba)c=1\cdot c=c .
+\]
+\end{proof}
+
+\begin{proposition}[整数环中的可逆元]
+设 \(a,b\in\Z\)，且 \(ab=1\)。则
+\[
+a=\pm1 .
+\]
+\end{proposition}
+
+\begin{proof}
+由 \(ab=1\ne0\) 知 \(a\ne0\)、\(b\ne0\)，故 \(|a|\ge1\)、\(|b|\ge1\)。若 \(|a|\ge2\)，则
+\[
+1=|ab|=|a|\cdot|b|\ge2|b|\ge2,
+\]
+矛盾。故 \(|a|=1\)，即 \(a=\pm1\)（此时 \(b=a\)）。
+\end{proof}
+
+\noindent\textbf{注.} 也可用带余除法证明，但那要先有带余除法的存在性与唯一性；这里只用了 \(\Z\) 的绝对值与序性质。
+
+\begin{proposition}[逆元的负号]
+设 \(R\) 是幺环，\(a\in R\) 可逆。则 \(-a\) 也可逆，且
+\[
+(-a)^{-1}=-a^{-1}.
+\]
+\end{proposition}
+
+\begin{proof}
+前面已证 \(0b=0\) 与 \((-a)b=a(-b)=-ab\)（\(\forall b\in R\)）。于是
+\[
+(-a)\bigl(-a^{-1}\bigr)=-\bigl(a\cdot(-a^{-1})\bigr)=-\bigl(-(aa^{-1})\bigr)=aa^{-1}=1,
+\]
+同理 \((-a^{-1})(-a)=1\)。由逆元唯一得 \((-a)^{-1}=-a^{-1}\)。
+\end{proof}
+
+\begin{definition}[元素倍与方幂]
+设 \(R\) 是环，\(a\in R\)。对正整数 \(n\) 规定
+\[
+na=\underbrace{a+a+\cdots+a}_{n\ \text{个}},\qquad
+a^n=\underbrace{a\cdot a\cdots a}_{n\ \text{个}} ;
+\]
+再规定
+\[
+0a=0,\qquad (-n)a=-(na)\quad(n>0),
+\]
+并（当 \(R\) 是幺环时）规定 \(a^0=1\)。
+\end{definition}
+
+\begin{proposition}[元素倍与方幂的运算法则]
+设 \(R\) 是环，\(a,b\in R\)，\(m,n\in\Z\)（涉及 \(a^0\) 时要求 \(R\) 是幺环），则
 \begin{enumerate}[label=(\arabic*)]
-  \item \textbf{乘以非零常数次数不变。}  
-  若 \(c\in K^\times\)，则
-  \[
-  \deg(cf)=\deg f.
-  \]
+  \item \((m+n)a=ma+na\)，\(\quad m(na)=(mn)a\)，\(\quad m(a+b)=ma+mb\)；
+  \item 若 \(m,n\ge0\)，则 \(a^{m+n}=a^ma^n\)，\(\quad (a^m)^n=a^{mn}\)。
+\end{enumerate}
+\end{proposition}
 
-  \item \textbf{乘积次数不小于原次数。}  
-  若 \(fg=h\)，且 \(g\ne 0\)，则
-  \[
-  \deg h=\deg f+\deg g\ge \deg f.
-  \]
+\begin{proof}
+(1) \(m,n>0\) 时由加法结合律与交换律把各项并列即得；\(m,n\) 中有 \(0\) 或负数时，按补充规定化为正整数情形。
 
-  \item \textbf{乘积为常数时，两者次数为 0。}  
-  若
-  \[
-  fg=c\ne 0,\qquad c\in K,
-  \]
-  则
-  \[
-  \deg f=\deg g=0,
-  \]
-  即 \(f,g\) 都是非零常数。由此可得相伴的等价定义：
-  \[
-  f\text{ 与 }g\text{ 相伴}
-  \iff
-  \exists\,c\in K^\times,\quad f=cg.
-  \]
+(2) \(a^{m+n}=a^ma^n\) 就是把 \(m+n\) 个 \(a\) 分成前 \(m\) 个与后 \(n\) 个，由结合律成立。对 \(n\) 归纳证明 \((a^m)^n=a^{mn}\)：\(n=0\) 时两边都是 \(1\)；若 \((a^m)^n=a^{mn}\)，则
+\[
+(a^m)^{n+1}=(a^m)^n\cdot a^m=a^{mn}\cdot a^m=a^{mn+m}=a^{m(n+1)} .
+\]
+\end{proof}
 
-  \item \textbf{逆元唯一。}  
-  设 \(a\) 有左逆 \(b\) 和右逆 \(c\)，即
-  \[
-  ba=1,\qquad ac=1.
-  \]
-  则
-  \[
-  b=b(ac)=(ba)c=c.
-  \]
-  所以逆元唯一。
+\begin{proposition}[乘以非零常数不改变次数]
+设 \(c\in K^\times\)，\(f\in K[x]\)。则
+\[
+\deg(cf)=\deg f .
+\]
+\end{proposition}
 
-  \item \textbf{整数环 \(\Z\) 的可逆元。}  
-  在 \(\Z\) 中，若
-  \[
-  ab=1,
-  \]
-  则
-  \[
-  a=\pm 1.
-  \]
-  证明：若 \(|a|>1\)，则 \(|ab|>1\)，矛盾；或用带余除法。带余除法唯一性此处暂未展开。
+\begin{proof}
+若 \(f=0\)，则 \(cf=0\)，两边都是 \(-\infty\)。若 \(f=\sum_{i=0}^{n}a_ix^i\) 且 \(a_n\ne0\)，则 \(cf=\sum_{i=0}^{n}ca_ix^i\) 且 \(ca_n\ne0\)，故 \(\deg(cf)=n=\deg f\)。
+\end{proof}
 
-  \item \textbf{逆元的负号。}  
-  先证 \(0\cdot a=0\)：
-  \[
-  0a=(0+0)a=0a+0a,
-  \]
-  两边加 \(-(0a)\)，得
-  \[
-  0a=0.
-  \]
-  若 \(a\) 可逆，则
-  \[
-  (-a)(-a^{-1})=aa^{-1}=1.
-  \]
-  因此
-  \[
-  (-a)^{-1}=-a^{-1}.
-  \]
+\begin{proposition}[乘积的次数]
+设 \(f,g,h\in K[x]\)，\(g\ne0\)，且 \(fg=h\)。则
+\[
+\deg h=\deg f+\deg g\ge\deg f .
+\]
+\end{proposition}
 
-  \item \textbf{\(na\) 与 \(a^n\) 的定义。}  
-  对 \(n\in\mathbb Z_{>0}\)，
-  \[
-  na=\underbrace{a+\cdots+a}_{n\text{ 个}},\qquad
-  a^n=\underbrace{a\cdots a}_{n\text{ 个}}.
-  \]
-  规定
-  \[
-  0a=0,\qquad (-n)a=-(na),\qquad a^0=1.
-  \]
-  若乘法结合，则
-  \[
-  a^{m+n}=a^ma^n,\qquad (a^m)^n=a^{mn}.
-  \]
+\begin{proof}
+由乘法的次数得 \(\deg h=\deg f+\deg g\)；又 \(\deg g\ge0\)，故 \(\deg f+\deg g\ge\deg f\)（当 \(f=0\) 时两边都是 \(-\infty\)）。
+\end{proof}
 
-  \item \textbf{幂零矩阵求逆。}  
-  若
-  \[
-  A=I+H,\qquad H^m=0,
-  \]
-  则
-  \[
-  A^{-1}=I-H+H^2-\cdots+(-1)^{m-1}H^{m-1}.
-  \]
-  因为
-  \[
-  (I+H)\bigl(I-H+H^2-\cdots+(-1)^{m-1}H^{m-1}\bigr)
-  =I+(-1)^{m-1}H^m=I.
-  \]
+\begin{proposition}[乘积为常数]
+设 \(f,g\in K[x]\)，\(c\in K^\times\)，且
+\[
+fg=c .
+\]
+则 \(f,g\) 都是非零常数，即
+\[
+\deg f=\deg g=0,\qquad f,g\in K^\times .
+\]
+\end{proposition}
 
-  \item \textbf{\(A\) 的特征多项式与 \(A^m\) 的特征多项式。}  
-  若 \(A\) 在代数闭域上的特征值为
-  \[
-  \lambda_1,\dots,\lambda_n
-  \]
-  按代数重数计，则
-  \[
-  f_A(x)=\prod_{i=1}^n(x-\lambda_i),
-  \]
-  而
-  \[
-  f_{A^m}(x)=\prod_{i=1}^n(x-\lambda_i^m).
-  \]
-  若 \(A\) 可对角化，
-  \[
-  A=P\operatorname{diag}(\lambda_1,\dots,\lambda_n)P^{-1},
-  \]
-  则
-  \[
-  A^m=P\operatorname{diag}(\lambda_1^m,\dots,\lambda_n^m)P^{-1},
-  \]
-  结论直接得到。
+\begin{proof}
+由 \(fg=c\ne0\) 知 \(f\ne0\)、\(g\ne0\)，于是
+\[
+0=\deg c=\deg(fg)=\deg f+\deg g .
+\]
+而 \(\deg f\ge0\)、\(\deg g\ge0\)，故 \(\deg f=\deg g=0\)，即 \(f,g\) 都是非零常数。
+\end{proof}
 
-  \item \textbf{\(\det(AB)=\det A\det B\) 的证明思路。}  
-  若 \(A\) 不可逆，则 \(\rank A<n\)，从而
-  \[
-  \rank(AB)\le \rank A<n,
-  \]
-  所以
-  \[
-  \det(AB)=0=\det A\det B.
-  \]
-  若 \(A\) 可逆，则 \(A\) 可写成初等矩阵的乘积：
-  \[
-  A=E_1E_2\cdots E_k.
-  \]
-  对初等矩阵 \(E\)，容易验证
-  \[
-  \det(EB)=\det E\det B.
-  \]
-  于是
-  \[
-  \det(AB)=\det(E_1\cdots E_kB)
-  =\det E_1\cdots \det E_k\det B
-  =\det A\det B.
-  \]
+\begin{definition}[整除与相伴]
+设 \(f,g\in K[x]\)。若存在 \(q\in K[x]\) 使 \(g=qf\)，则称 \(f\) 整除 \(g\)，记作 \(f\mid g\)；若存在 \(c\in K^\times\) 使 \(f=cg\)，则称 \(f\) 与 \(g\) 相伴。
+\end{definition}
+
+\begin{corollary}[相伴的等价刻画]
+设 \(f,g\in K[x]\) 都是非零多项式，则
+\[
+f\ \text{与}\ g\ \text{相伴}\iff f\mid g\ \text{且}\ g\mid f .
+\]
+\end{corollary}
+
+\begin{proof}
+（\(\Rightarrow\)）设 \(f=cg\)，\(c\in K^\times\)，则 \(g=c^{-1}f\)，故 \(f\mid g\) 且 \(g\mid f\)。
+
+（\(\Leftarrow\)）设 \(g=qf\)，\(f=q'g\)，其中 \(q,q'\in K[x]\)。代入得
+\[
+f=q'g=q'(qf)=(q'q)f,
+\]
+即 \((1-q'q)f=0\)。因 \(f\ne0\)，由无零因子得 \(q'q=1\)。再由“乘积为常数”得 \(\deg q'=\deg q=0\)，即 \(q\in K^\times\)；于是 \(f=q'g\) 且 \(q'\in K^\times\)，表明 \(f\) 与 \(g\) 相伴。
+\end{proof}
+
+\noindent\textbf{注.} 相伴是等价关系：自反（\(f=1\cdot f\)）、对称（\(f=cg\Rightarrow g=c^{-1}f\)）、传递（\(f=cg\)、\(g=dh\Rightarrow f=(cd)h\)）。
+
+\begin{theorem}[幂零扰动的可逆性]
+设 \(H\in M_n(K)\) 满足 \(H^m=0\)（\(m\ge1\)），令 \(A=I+H\)。则 \(A\) 可逆，且
+\[
+A^{-1}=I-H+H^2-\cdots+(-1)^{m-1}H^{m-1}
+=\sum_{k=0}^{m-1}(-1)^kH^k .
+\]
+\end{theorem}
+
+\begin{proof}
+在多项式环 \(K[t]\) 中有恒等式
+\[
+(1+t)\bigl(1-t+t^2-\cdots+(-1)^{m-1}t^{m-1}\bigr)=1-(-t)^m=1-(-1)^mt^m .
+\]
+取环同态 \(K[t]\to M_n(K)\)，\(t\mapsto H\)，常数 \(a\) 对应纯量矩阵 \(aI\)（这就是把 \(t\) “代入” \(H\)）。环同态保持恒等式，故
+\[
+(I+H)\Bigl(\sum_{k=0}^{m-1}(-1)^kH^k\Bigr)=I-(-1)^mH^m=I .
+\]
+同理（\(I\) 与 \(H\) 的任何多项式都交换）
+\[
+\Bigl(\sum_{k=0}^{m-1}(-1)^kH^k\Bigr)(I+H)=I .
+\]
+因此 \(A=I+H\) 可逆，且逆为上式。
+\end{proof}
+
+\noindent\textbf{注.} \(m=1\) 时 \(H=0\)，公式给出 \(A^{-1}=I\)，与 \(A=I\) 相符。
+
+\begin{proposition}[方幂的特征多项式]
+设 \(A\in M_n(F)\)，\(F\) 是代数闭域（例如 \(\C\)），且 \(A\) 的特征值按代数重数计为 \(\lambda_1,\dots,\lambda_n\)。则对 \(m\ge1\)
+\[
+f_A(x)=\prod_{i=1}^{n}(x-\lambda_i),\qquad
+f_{A^m}(x)=\prod_{i=1}^{n}\bigl(x-\lambda_i^m\bigr).
+\]
+\end{proposition}
+
+\begin{proof}
+代数闭域上的方阵都可上三角化：存在可逆矩阵 \(P\) 使
+\[
+T=P^{-1}AP
+\]
+为上三角矩阵，其对角元恰是 \(A\) 的全部特征值（按代数重数计）\(\lambda_1,\dots,\lambda_n\)。上三角矩阵的特征多项式等于各对角元所对应一次因式之积，故
+\[
+f_A(x)=f_T(x)=\prod_{i=1}^{n}(x-\lambda_i).
+\]
+又
+\[
+P^{-1}A^mP=T^m ,
+\]
+上三角矩阵的乘积仍为上三角，且 \(T^m\) 的对角元为 \(\lambda_1^m,\dots,\lambda_n^m\)。相似矩阵有相同的特征多项式，故
+\[
+f_{A^m}(x)=f_{T^m}(x)=\prod_{i=1}^{n}\bigl(x-\lambda_i^m\bigr).
+\]
+\end{proof}
+
+\noindent\textbf{注.} 特别地，若 \(A=P\operatorname{diag}(\lambda_1,\dots,\lambda_n)P^{-1}\) 可对角化，则 \(A^m=P\operatorname{diag}(\lambda_1^m,\dots,\lambda_n^m)P^{-1}\)，结论直接得到；上面的证明表明不可对角化的情形同样成立。还要注意一般地 \(f_{A^m}(x)\ne(f_A(x))^m\)：例如 \(A=\begin{pmatrix}0&1\\0&0\end{pmatrix}\) 时 \(f_A(x)=x^2\)，\(A^2=0\)，故 \(f_{A^2}(x)=x^2\ne x^4=(f_A(x))^2\)。
+
+\begin{theorem}[行列式的乘法性]
+设 \(A,B\in M_n(K)\)。则
+\[
+\det(AB)=\det A\cdot\det B .
+\]
+\end{theorem}
+
+\begin{proof}
+证明用到以下标准事实：
+\begin{enumerate}[label=(\alph*)]
+  \item \(\det A=0\iff A\) 不可逆 \(\iff\rank A<n\)；
+  \item \(\rank(AB)\le\rank A\)；
+  \item \(A\) 可逆 \(\iff\) \(A\) 可写成有限个初等矩阵的乘积 \(A=E_1E_2\cdots E_k\)；
+  \item 初等行变换对行列式的影响：交换两行，行列式变号；把某一行乘以 \(c\ne0\)，行列式乘以 \(c\)；把某一行的 \(c\) 倍加到另一行，行列式不变。
 \end{enumerate}
 
-\begin{example}[证明多项式环无零因子]
-设 \(f,g\in K[x]\)。若
-\[
-fg=0,
-\]
-证明 \(f=0\) 或 \(g=0\)。
+\textbf{情形 1：\(A\) 不可逆。} 由 (a) 得 \(\rank A<n\)，由 (b) 得 \(\rank(AB)\le\rank A<n\)，再由 (a) 得 \(\det(AB)=0\)；又 \(\det A=0\)，故 \(\det(AB)=0=\det A\det B\)。
 
-证明：反设 \(f\ne 0\) 且 \(g\ne 0\)。则
+\textbf{情形 2：\(A\) 可逆。} 由 (c) 设 \(A=E_1E_2\cdots E_k\)，其中每个 \(E_i\) 都是初等矩阵。先对初等矩阵 \(E\) 与任意 \(B\) 验证
 \[
-\deg(fg)=\deg f+\deg g\ge 0,
+\det(EB)=\det E\cdot\det B .
 \]
-所以 \(fg\ne 0\)，矛盾。
-\end{example}
+按 \(E\) 的三种类型逐一验证：
+\begin{enumerate}[label=(\arabic*)]
+  \item \(E\) 交换第 \(i\)、\(j\) 两行：\(\det E=-1\)，而 \(EB\) 恰是交换 \(B\) 的第 \(i\)、\(j\) 两行，由 (d) 得 \(\det(EB)=-\det B=\det E\det B\)；
+  \item \(E\) 把第 \(i\) 行乘以 \(c\ne0\)：\(\det E=c\)，而 \(EB\) 恰是把 \(B\) 的第 \(i\) 行乘以 \(c\)，由 (d) 得 \(\det(EB)=c\det B=\det E\det B\)；
+  \item \(E\) 把第 \(i\) 行的 \(c\) 倍加到第 \(j\) 行：\(\det E=1\)，而 \(EB\) 是对 \(B\) 作同类行变换，由 (d) 得 \(\det(EB)=\det B=\det E\det B\)。
+\end{enumerate}
+于是反复使用上式得
+\[
+\det(AB)=\det(E_1E_2\cdots E_kB)
+=\det E_1\det E_2\cdots\det E_k\det B
+=\det A\det B,
+\]
+最后一步用到 \(\det A=\det(E_1E_2\cdots E_k)=\det E_1\det E_2\cdots\det E_k\)（在上式中依次取 \(B=E_2\cdots E_k,\dots,I\)）。
+\end{proof}
+
+\noindent\textbf{另一证法（纯计算）.} 设 \(A\) 可逆，考虑 \(2n\) 阶分块矩阵
+\[
+M=\begin{pmatrix}A&0\\-I_n&B\end{pmatrix}.
+\]
+由分块三角行列式公式（对前 \(n\) 行作 Laplace 展开即可单独证明，不依赖本定理）得 \(\det M=\det A\det B\)。另一方面，把 \(M\) 的第 2 分块行的 \(A\) 倍加到第 1 分块行——这是一串“倍加”型初等行变换，故行列式不变——得到
+\[
+M'=\begin{pmatrix}0&AB\\-I_n&B\end{pmatrix};
+\]
+再把两个分块列交换（等于 \(n^2\) 次列交换，符号因子为 \((-1)^{n^2}=(-1)^n\)），得
+\[
+\begin{pmatrix}AB&0\\B&-I_n\end{pmatrix},
+\]
+其行列式为
+\[
+(-1)^n\det(AB)\cdot\det(-I_n)=(-1)^n\det(AB)\cdot(-1)^n=\det(AB).
+\]
+因此 \(\det(AB)=\det M=\det A\det B\)。\(A\) 不可逆的情形同情形 1。
+
+\subsubsection{例题}
 
 \begin{example}[幂零矩阵求逆]
 设
@@ -372,10 +534,8 @@ A=\begin{pmatrix}
 1 & 1 & 0\\
 0 & 1 & 1\\
 0 & 0 & 1
-\end{pmatrix}.
-\]
-令
-\[
+\end{pmatrix},
+\qquad
 H=A-I=
 \begin{pmatrix}
 0 & 1 & 0\\
@@ -383,7 +543,7 @@ H=A-I=
 0 & 0 & 0
 \end{pmatrix}.
 \]
-则
+直接计算得
 \[
 H^2=
 \begin{pmatrix}
@@ -392,9 +552,9 @@ H^2=
 0 & 0 & 0
 \end{pmatrix},
 \qquad
-H^3=0.
+H^3=0 .
 \]
-所以
+由幂零扰动的可逆性，
 \[
 A^{-1}=I-H+H^2
 =
@@ -404,9 +564,26 @@ A^{-1}=I-H+H^2
 0 & 0 & 1
 \end{pmatrix}.
 \]
+验证：\((I+H)(I-H+H^2)=I+H^3=I\)。
 \end{example}
 
-\begin{example}[\(A^m\) 的特征多项式]
+\begin{example}[上三角矩阵方幂的特征多项式]
+设
+\[
+A=\begin{pmatrix}\lambda&1\\0&\lambda\end{pmatrix},
+\]
+则对 \(m\ge1\)
+\[
+A^m=\begin{pmatrix}\lambda^m&m\lambda^{m-1}\\0&\lambda^m\end{pmatrix},
+\]
+故
+\[
+f_A(x)=(x-\lambda)^2,\qquad f_{A^m}(x)=(x-\lambda^m)^2 .
+\]
+这里 \(A\) 不可对角化，但 \(f_{A^m}\) 仍由 \(A\) 的特征值的 \(m\) 次幂给出。
+\end{example}
+
+\begin{example}[可对角化的情形]
 设
 \[
 A=\begin{pmatrix}
