@@ -504,7 +504,10 @@ f_{A^m}(x)=f_{T^m}(x)=\prod_{i=1}^{n}\bigl(x-\lambda_i^m\bigr).
 =\det E_1\det E_2\cdots\det E_k\det B
 =\det A\det B,
 \]
-最后一步用到 \(\det A=\det(E_1E_2\cdots E_k)=\det E_1\det E_2\cdots\det E_k\)（在上式中依次取 \(B=E_2\cdots E_k,\dots,I\)）。
+最后一步用到（在上式中依次取 \(B=E_2\cdots E_k,\dots,I\)）
+\[
+\det A=\det(E_1E_2\cdots E_k)=\det E_1\det E_2\cdots\det E_k .
+\]
 \end{proof}
 
 \noindent\textbf{另一证法（纯计算）.} 设 \(A\) 可逆，考虑 \(2n\) 阶分块矩阵
@@ -606,4 +609,243 @@ A^m=\begin{pmatrix}
 \[
 f_{A^m}(x)=(x-2^m)(x-3^m).
 \]
+\end{example}
+
+\subsection{\(\lambda\)-矩阵与相抵标准形}
+
+\subsubsection{相抵与标准形}
+
+\begin{definition}[矩阵的相抵]
+设 \(K\) 是数域，\(\lambda\) 是未定元。元素取自 \(K[\lambda]\) 的矩阵称为 \(\lambda\)-矩阵。设 \(A(\lambda)\)、\(B(\lambda)\) 是同阶 \(\lambda\)-矩阵，若存在可逆的 \(\lambda\)-矩阵 \(P(\lambda)\)、\(Q(\lambda)\)，使
+\[
+B(\lambda)=P(\lambda)A(\lambda)Q(\lambda),
+\]
+则称 \(A(\lambda)\) 与 \(B(\lambda)\) 相抵。
+\end{definition}
+
+\noindent\textbf{注.} 方阵 \(A(\lambda)\) 可逆当且仅当 \(\det A(\lambda)\) 是非零常数：若 \(\det A(\lambda)=c\in K^\times\)，则由 \(A\operatorname{adj}A=(\det A)I\) 得
+\[
+A^{-1}=c^{-1}\operatorname{adj}A ;
+\]
+反之由 \(\det A\cdot\det A^{-1}=1\) 知 \(\det A\in K^\times\)。又因为可逆的 \(\lambda\)-矩阵恰是有限个初等 \(\lambda\)-矩阵的乘积，所以“相抵”就是“能经过有限次初等行变换与初等列变换互相转化”。
+
+\begin{theorem}[相抵标准形]
+设 \(A(\lambda)\) 是 \(n\) 阶 \(\lambda\)-矩阵，\(\rank A(\lambda)=r\)。则 \(A(\lambda)\) 相抵于
+\[
+\operatorname{diag}\bigl(d_1(\lambda),\dots,d_r(\lambda),\underbrace{0,\dots,0}_{n-r}\bigr),
+\]
+其中每个 \(d_i(\lambda)\) 都是首一多项式，且
+\[
+d_1(\lambda)\mid d_2(\lambda)\mid\cdots\mid d_r(\lambda).
+\]
+这样的矩阵称为 \(A(\lambda)\) 的\textbf{相抵标准形}，它由 \(A(\lambda)\) 唯一决定；\(d_1,\dots,d_r\) 称为 \(A(\lambda)\) 的\textbf{不变因子}。
+\end{theorem}
+
+\begin{proposition}[不变因子的计算]
+设 \(A(\lambda)\) 是 \(n\) 阶 \(\lambda\)-矩阵，记 \(D_k\) 为 \(A(\lambda)\) 的全部 \(k\) 阶子式的首一最大公因式（约定 \(D_0=1\)，且当 \(k>\rank A\) 时 \(D_k=0\)）。则 \(A(\lambda)\) 的不变因子为
+\[
+d_k=\frac{D_k}{D_{k-1}}\qquad(k=1,\dots,n).
+\]
+\end{proposition}
+
+\begin{proof}
+\textbf{(1) 先证 \(D_k\) 是相抵不变量}，即初等变换不改变 \(D_k\)。只需检查三种初等变换。
+
+交换两行（或两列）：\(k\) 阶子式只是被重新排列，可能相差一个符号，而符号是非零常数，首一化后最大公因式不变。
+
+把第 \(j\) 行的 \(c(\lambda)\) 倍加到第 \(i\) 行：变换后的任一 \(k\) 阶子式 \(\Delta\) 或等于原来的某个 \(k\) 阶子式，或等于 \(\Delta_1+c(\lambda)\Delta_2\)，其中 \(\Delta_1,\Delta_2\) 都是原来的 \(k\) 阶子式（子式对每一行都是线性的）。于是原来的 \(D_k\) 整除每一个新的 \(k\) 阶子式；又该变换可逆（再把 \(-c(\lambda)\) 倍加回去），反向同理，故两边的最大公因式互相整除，相等。
+
+用非零常数乘某一行（或列）：子式只差一个非零常数，首一化后不变。
+
+\textbf{(2) 再对标准形算 \(D_k\)。} 设 \(A_0=\operatorname{diag}(d_1,\dots,d_n)\) 且 \(d_i\mid d_{i+1}\)（出现零时把零排在后面，下面只讨论非零的 \(d_i\)，一般情形完全相同）。任取 \(k\) 阶子式，它只在行指标与列指标相同的子阵上非零，其值为 \(\pm d_{i_1}d_{i_2}\cdots d_{i_k}\)（\(i_1<i_2<\cdots<i_k\)）。由 \(i_j\ge j\) 以及整除链知 \(d_j\mid d_{i_j}\)，故该子式被 \(d_1d_2\cdots d_k\) 整除；另一方面，取前 \(k\) 行前 \(k\) 列的子式，其值恰为 \(d_1d_2\cdots d_k\)。所以
+\[
+D_k=d_1d_2\cdots d_k .
+\]
+
+由 (1)(2)，相抵的矩阵有相同的 \(D_1,\dots,D_n\)，而 \(d_1\cdots d_k=D_k\)，于是 \(d_k=D_k/D_{k-1}\) 由 \(A(\lambda)\) 唯一决定，标准形也唯一。
+\end{proof}
+
+\begin{definition}[多项式的最大公因式]
+设 \(f_1,\dots,f_s\in K[\lambda]\) 不全为零。若首一多项式 \(d\) 满足：\(d\mid f_i\)（\(i=1,\dots,s\)），并且任何整除每个 \(f_i\) 的多项式 \(c\) 都整除 \(d\)，则称 \(d\) 为 \(f_1,\dots,f_s\) 的最大公因式，记作 \((f_1,\dots,f_s)\)。若 \((f,g)=1\)，则称 \(f\) 与 \(g\) 互素。
+\end{definition}
+
+\noindent\textbf{注（本节只用两条性质）.}
+（1）一组多项式的最大公因式可以两两迭代地求：
+\[
+(f_1,f_2,f_3)=\bigl((f_1,f_2),f_3\bigr);
+\]
+（2）只要其中有两个互素，整组的最大公因式就是 \(1\)。特别地，两个一次多项式 \(a\lambda+b\) 与 \(c\lambda+d\) 互素，当且仅当它们没有公共根。
+
+最大公因式的存在性与具体算法（带余除法与辗转相除）属于“一元多项式环”一章的内容。
+
+\subsubsection{例题：求相抵标准形}
+
+\begin{example}[求相抵标准形]
+求
+\[
+A(\lambda)=
+\begin{pmatrix}
+\lambda-4 & 5 & -2\\
+-5 & \lambda+7 & -3\\
+-6 & 9 & \lambda-4
+\end{pmatrix}
+\]
+的相抵标准形。（原题把 \(\lambda\) 记作 \(x\)。）
+
+\textbf{解法一（初等变换法：用带余除法把常数“挤”出来）}
+
+第一步，先用常数凑出 \(1\)。第一行有常数 \(5\) 与 \(-2\)，而 \(5+3\cdot(-2)=-1\)，于是
+\[
+A(\lambda)\xrightarrow{\;c_2+3c_3\;}
+\begin{pmatrix}
+\lambda-4 & -1 & -2\\
+-5 & \lambda-2 & -3\\
+-6 & 3\lambda-3 & \lambda-4
+\end{pmatrix},
+\]
+\[
+\xrightarrow{\;c_1\leftrightarrow c_2\;}
+\begin{pmatrix}
+-1 & \lambda-4 & -2\\
+\lambda-2 & -5 & -3\\
+3\lambda-3 & -6 & \lambda-4
+\end{pmatrix}
+\xrightarrow{\;r_1\times(-1)\;}
+\begin{pmatrix}
+1 & 4-\lambda & 2\\
+\lambda-2 & -5 & -3\\
+3\lambda-3 & -6 & \lambda-4
+\end{pmatrix}.
+\]
+
+第二步，用左上角的 \(1\) 清掉第一行与第一列（只用倍加变换）：
+\[
+\xrightarrow[\;c_3-2c_1\;]{\;c_2-(4-\lambda)c_1\;}
+\begin{pmatrix}
+1 & 0 & 0\\
+\lambda-2 & \lambda^2-6\lambda+3 & 1-2\lambda\\
+3\lambda-3 & 3\lambda^2-15\lambda+6 & 2-5\lambda
+\end{pmatrix}
+\xrightarrow[\;r_3-(3\lambda-3)r_1\;]{\;r_2-(\lambda-2)r_1\;}
+\begin{pmatrix}
+1 & 0 & 0\\
+0 & \lambda^2-6\lambda+3 & 1-2\lambda\\
+0 & 3\lambda^2-15\lambda+6 & 2-5\lambda
+\end{pmatrix}.
+\]
+
+第三步，右下角的 \(2\times2\) 块里已经出现一次多项式 \(1-2\lambda\)，把它换到主对角线上，再用带余除法把余数挤出来：
+\[
+\xrightarrow{\;c_2\leftrightarrow c_3\;}
+\begin{pmatrix}
+1 & 0 & 0\\
+0 & 1-2\lambda & \lambda^2-6\lambda+3\\
+0 & 2-5\lambda & 3\lambda^2-15\lambda+6
+\end{pmatrix}.
+\]
+用 \(1-2\lambda\) 除 \(2-5\lambda\)：
+\[
+2-5\lambda=(1-2\lambda)\cdot\frac52+\Bigl(-\frac12\Bigr),
+\]
+所以作 \(r_3-\frac52r_2\) 后，\((3,2)\) 位置出现常数 \(-\frac12\)：
+\[
+\xrightarrow{\;r_3-\frac52r_2\;}
+\begin{pmatrix}
+1 & 0 & 0\\
+0 & 1-2\lambda & \lambda^2-6\lambda+3\\
+0 & -\frac12 & \frac12(\lambda^2-3)
+\end{pmatrix}
+\xrightarrow{\;r_3\times(-2)\;}
+\begin{pmatrix}
+1 & 0 & 0\\
+0 & 1-2\lambda & \lambda^2-6\lambda+3\\
+0 & 1 & 3-\lambda^2
+\end{pmatrix}.
+\]
+
+第四步，把这个 \(1\) 换到主对角线，清掉它所在的行与列：
+\[
+\xrightarrow{\;r_2\leftrightarrow r_3\;}
+\begin{pmatrix}
+1 & 0 & 0\\
+0 & 1 & 3-\lambda^2\\
+0 & 1-2\lambda & \lambda^2-6\lambda+3
+\end{pmatrix}
+\xrightarrow{\;r_3-(1-2\lambda)r_2\;}
+\begin{pmatrix}
+1 & 0 & 0\\
+0 & 1 & 3-\lambda^2\\
+0 & 0 & -2\lambda^2(\lambda-1)
+\end{pmatrix},
+\]
+\[
+\xrightarrow{\;c_3-(3-\lambda^2)c_2\;}
+\begin{pmatrix}
+1 & 0 & 0\\
+0 & 1 & 0\\
+0 & 0 & -2\lambda^2(\lambda-1)
+\end{pmatrix}
+\xrightarrow{\;r_3\times(-\frac12)\;}
+\operatorname{diag}\bigl(1,\ 1,\ \lambda^2(\lambda-1)\bigr).
+\]
+
+最后一步只是把对角元化为首一（相抵允许乘非零常数）。因此
+\[
+A(\lambda)\ \text{相抵于}\ \operatorname{diag}\bigl(1,\ 1,\ \lambda^2(\lambda-1)\bigr).
+\]
+
+\textbf{解法二（不变因子法：算各阶子式的最大公因式）}
+
+\(D_1\)：元素中有非零常数 \(5\) 与 \(-2\)，任何公因式都要整除它们，而 \(\gcd(5,-2)=1\)，故
+\[
+D_1=1 .
+\]
+
+\(D_2\)：取三个 \(2\) 阶子式
+\[
+\begin{vmatrix}\lambda-4&5\\-5&\lambda+7\end{vmatrix}=\lambda^2+3\lambda-3,\qquad
+\begin{vmatrix}\lambda-4&-2\\-5&-3\end{vmatrix}=2-3\lambda,\qquad
+\begin{vmatrix}5&-2\\\lambda+7&-3\end{vmatrix}=2\lambda-1 .
+\]
+其中 \(2-3\lambda\) 的根是 \(\frac23\)，\(2\lambda-1\) 的根是 \(\frac12\)，两者不相等，故这两个一次多项式互素。由上面的注 (2)，全部九个 \(2\) 阶子式的最大公因式为
+\[
+D_2=1 .
+\]
+
+\(D_3\)：按第一行展开，
+\[
+D_3=\det A(\lambda)=(\lambda-4)\bigl[(\lambda+7)(\lambda-4)+27\bigr]
+-5\bigl[-5(\lambda-4)-18\bigr]
+-2\bigl[-45+6(\lambda+7)\bigr]
+=\lambda^3-\lambda^2=\lambda^2(\lambda-1).
+\]
+
+于是
+\[
+d_1=D_1=1,\qquad d_2=\frac{D_2}{D_1}=1,\qquad d_3=\frac{D_3}{D_2}=\lambda^2(\lambda-1),
+\]
+且 \(d_1\mid d_2\mid d_3\) 成立，故相抵标准形仍为
+\[
+\operatorname{diag}\bigl(1,\ 1,\ \lambda^2(\lambda-1)\bigr),
+\]
+与解法一结论一致。
+
+\noindent\textbf{注（这个矩阵的来历）.} 本例中
+\[
+A(\lambda)=\lambda I-B,\qquad
+B=\begin{pmatrix}
+4 & -5 & 2\\
+5 & -7 & 3\\
+6 & -9 & 4
+\end{pmatrix},
+\]
+所以 \(D_3=\det(\lambda I-B)=\chi_B(\lambda)\) 是 \(B\) 的特征多项式；又因为 \(d_1=d_2=1\)，最大的不变因子 \(d_3\) 就是 \(B\) 的最小多项式，即
+\[
+\mu_B(\lambda)=\chi_B(\lambda)=\lambda^2(\lambda-1).
+\]
+顺带可以看出：\(\lambda=0\) 的代数重数是 \(2\)，而 \(\operatorname{rank}B=2\) 给出几何重数 \(3-2=1\)，所以 \(B\) 不可对角化，\(\lambda=0\) 对应一个 \(2\) 阶 Jordan 块（Jordan 标准形在后面的章节）。
+
+作为对照：若把中间的 \(\lambda+7\) 换成 \(\lambda-7\)，则 \(d_3=\lambda^3-15\lambda^2+112\lambda-56\) 在 \(\mathbb{Q}\) 上不可约，特征值互异、对应的 \(B\) 可对角化——只改一个符号，标准形便完全不同。
+
+两种方法的关系：\textbf{初等变换法给出“怎么变过去”，不变因子法给出“答案是什么”}，且后者给出的 \(D_1,\dots,D_n\) 可以随时用来检验前者的每一步。
 \end{example}
