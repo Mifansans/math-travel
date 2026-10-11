@@ -239,18 +239,43 @@ f_{\bar z}=\tfrac12\bigl[(u_x-v_y)+i(v_x+u_y)\bigr],
 
 \smallskip
 \noindent
-\textbf{矩阵字典。} $L(h)=Ah+B\bar h$（$A=a+ib$，$B=c+id$）对应的矩阵与行列式是
+\textbf{矩阵字典。} 取 $\C$ 的实基 $\{1,i\}$（即 $h=x+iy$ 对应坐标 $(x,y)$）。
+线性映射的矩阵，\emph{第 $1$ 列是 $L(1)$ 的坐标，第 $2$ 列是 $L(i)$ 的坐标}：
 \[
-L\ \longleftrightarrow\ \begin{pmatrix} a+c & d-b\\ b+d & a-c\end{pmatrix},
-\qquad \det L=|A|^2-|B|^2 ;
+L(1)=A\cdot 1+B\cdot 1=A+B=(a+c)+i(b+d),\qquad
+L(i)=Ai+B\,\bar i=i(A-B)=(d-b)+i(a-c),
 \]
-$B=0$（复线性）时正是\emph{相似矩阵}
+于是
 \[
-L(h)=Ah\ \longleftrightarrow\ \begin{pmatrix} a & -b\\ b & a\end{pmatrix},
-\qquad \det L=|A|^2>0,
+L(h)=Ah+B\bar h\ \longleftrightarrow\ \begin{pmatrix} a+c & d-b\\ b+d & a-c\end{pmatrix},
+\qquad \det L=|A|^2-|B|^2 .
 \]
-即"旋转 $+$ 伸缩"。而 $f$ 的 Jacobi 矩阵 $\begin{pmatrix}u_x&u_y\\v_x&v_y\end{pmatrix}$
-在 Cauchy--Riemann 方程成立时恰好是这个形状（$u_x=v_y=a$，$u_y=-v_x=-b$）。
+直接验算也一样：$L(h)=(a+ib)(x+iy)+(c+id)(x-iy)
+=\bigl[(a+c)x+(d-b)y\bigr]+i\bigl[(b+d)x+(a-c)y\bigr]$，比较 $x,y$ 的系数即得上面这个矩阵。
+反过来从矩阵读回 $A,B$：$A=\dfrac{L(1)-iL(i)}{2}$，$B=\dfrac{L(1)+iL(i)}{2}$，即命题 \ref{prop:real-linear-form}。
+
+\smallskip
+\noindent
+\emph{例。} $A=2+i$、$B=1-3i$（即 $a=2,b=1,c=1,d=-3$），则
+$L\longleftrightarrow\begin{pmatrix}3&-4\\-2&1\end{pmatrix}$，$\det L=3\cdot1-(-4)(-2)=-5$；
+而 $|A|^2-|B|^2=5-10=-5$，两者一致。这里 $\det L<0$，说明这个 $L$ 把定向翻转了——
+一般的实线性映射允许如此（剪切、非均匀拉伸、翻转都可以）。
+
+\smallskip
+\noindent
+$B=0$（复线性）时矩阵化为\emph{相似矩阵}：若 $A=re^{i\theta}$，则
+\[
+L(h)=Ah\ \longleftrightarrow\ \begin{pmatrix} a & -b\\ b & a\end{pmatrix}
+=r\begin{pmatrix}\cos\theta & -\sin\theta\\ \sin\theta & \cos\theta\end{pmatrix},
+\qquad \det L=|A|^2=r^2>0,
+\]
+即"旋转 $\theta$ 再伸缩 $r$"：它把圆映成圆，因而保角。而 $f$ 的 Jacobi 矩阵
+$\begin{pmatrix}u_x&u_y\\v_x&v_y\end{pmatrix}$ 在 Cauchy--Riemann 方程成立时恰好是这个形状
+（$u_x=v_y=a$，$u_y=-v_x=-b$），于是
+\[
+\det J=u_xv_y-u_yv_x=a^2+b^2=|f'(z_0)|^2\ \ge\ 0 .
+\]
+也就是说：复可导时，微分的面积伸缩因子恰是 $|f'(z_0)|^2$，而且绝不翻转定向；一般二元可微则允许 $\det J<0$。
 
 \smallskip
 \noindent
