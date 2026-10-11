@@ -105,6 +105,49 @@ L(\alpha w_1+\beta w_2)=\alpha L(w_1)+\beta L(w_2).
 $L(w_1+w_2)=L(w_1)+L(w_2)$ 与 $L(\alpha w)=\alpha L(w)$ 两条（合写、分写等价）。
 把"实数 $\alpha,\beta$"换成"复数"，就是复线性。
 
+\smallskip
+\noindent
+\textbf{定义里那两个字母可以是任何"向量"。} 一般情形里 $V$ 的元素长什么样都行，只要能在 $V$ 里做加法与数乘：
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|l|l|l|}
+\hline
+向量空间 $V$ & 元素长什么样 & 线性映射的例子\\
+\hline
+数域 $K$ 本身 & 数 & $x\mapsto ax$\\
+\hline
+$K^n$ & 列向量 & $T(\mathbf x)=A\mathbf x$（$A$ 是 $m\times n$ 矩阵）\\
+\hline
+多项式空间 $K[t]$ & 多项式 & 求导 $D:p(t)\mapsto p'(t)$\\
+\hline
+连续函数空间 & 函数 & $f\mapsto\displaystyle\int_0^1 f$\\
+\hline
+$M_n(K)$ & 矩阵 & $X\mapsto AX-XB$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent
+所以"是不是线性映射"与元素是数还是列向量无关；矩阵只是"取定基之后"的坐标记录。
+特别地，$T:K^n\to K^m$ 线性 $\iff$ 存在 $m\times n$ 矩阵 $A$ 使 $T(\mathbf x)=A\mathbf x$，
+此时定义里的 $w_1,w_2$ 就是列向量。
+
+\smallskip
+\noindent
+三个容易踩的点：
+\begin{enumerate}[label=(\arabic*), leftmargin=2.2em]
+\item \emph{两侧空间可以不同}：$F:\R^n\to\R^m$ 中输入的 $\mathbf h$ 是 $n$ 维列向量、输出的 $L\mathbf h$ 是 $m$ 维列向量；
+$m=1$（如 $f:\R^2\to\R$）时输出就是数。
+\item \emph{系数必须取自同一个域 $K$}：允许复数当系数是\emph{复}线性，只允许实数才是\emph{实}线性——
+这正是后面 $\C$ 与 $M_2(\R)$ 的分界。
+\item $w_1,w_2$ 只是哑变量，写成 $u,v$ 或 $\mathbf x,\mathbf y$ 都一样，
+关键是"对任意两个元素、任意两个系数都成立"。
+\end{enumerate}
+
+\noindent
+本例 $V=W=\C$：$\C$ 的元素是\emph{数}，但由 $\C\ni x+iy\ \longleftrightarrow\ \binom{x}{y}\in\R^2$
+也可以把它们看成列向量，两种说法完全等价（详见第 4 节的矩阵字典与第 7 节）。
+
 例如 $L(w)=\lambda w$（$\lambda\in\C$）是复线性的（也是实线性的）；而 $L(w)=\bar w$、$L(w)=\operatorname{Re}w$、
 $L(w)=w+\bar w$ 只是实线性的，不是复线性的（试 $\alpha=i$ 即可看出）。
 
