@@ -84,15 +84,107 @@ $\dfrac{\partial\bar f}{\partial\bar z}=\frac12\bigl[(u_x+v_y)+i(u_y-v_x)\bigr]$
 $\dfrac{\partial\bar f}{\partial z}(z)=0$ 而 $\dfrac{\partial\bar f}{\partial\bar z}(z)=\overline{f'(z)}$：
 $\bar f$ 只"依赖 $\bar z$"（反全纯）。
 
-\subsection{补充：实线性映射、实可微与"极限换序"}
+\subsection{补充：可微、矩阵与线性映射}
 
-这一小节把后面证明里用到的三件事从头讲清楚（命题 \ref{prop:pointwise}、定理 \ref{thm:chain-general} 都用到它们）。
-看不懂"实线性映射"时，可以把它读成一句话：\emph{把 $\C$ 看成 $xy$ 平面，实线性映射就是 $x,y$ 的一次齐次式}。
+这一小节把后文反复用到的概念从头讲清楚（命题 \ref{prop:pointwise}、定理 \ref{thm:chain-general} 都依赖它们）。
+顺序是"由具体到抽象、再回到具体"：
 
-\subsubsection*{1. 实线性映射与它的复数写法}
+\begin{enumerate}[label=\arabic*., leftmargin=1.9em]
+\item 复数怎么变成矩阵；二元函数的"微分"本来就是矩阵；
+\item 一般线性映射的定义（那两个字母可以是任何"向量"）；
+\item $\C$ 上实线性映射的标准形 $L(h)=Ah+B\bar h$，以及"复线性 $\iff B=0$"；
+\item 实可微（它就是数分里的"二元可微"）的两种写法；
+\item 回到矩阵：Cauchy--Riemann 方程的几何含义；
+\item 与矩阵环 $M_n(K)$ 的联系；
+\item 两条工具：极限换序；
+\item 术语与符号约定（"相似"的两套意思、几个常用箭头）。
+\end{enumerate}
+
+\subsubsection*{1. 复数、列向量与矩阵}
+
+\noindent\textbf{(a) 复数 $\to$ 矩阵。}
+固定 $\lambda=a+ib\in\C$。"乘 $\lambda$"是 $\C$ 上的一个映射 $h\mapsto\lambda h$；
+把它写成 $\R^2$ 上的矩阵，用的是"两列 $=$ 两个基向量的像"这条算法：
+\[
+\lambda\cdot 1=\lambda=a+ib\ \Longrightarrow\ \text{第 1 列}=\binom{a}{b},
+\qquad
+\lambda\cdot i=i\lambda=-b+ia\ \Longrightarrow\ \text{第 2 列}=\binom{-b}{a},
+\]
+所以
+\[
+\lambda=a+ib\ \longmapsto\ M_\lambda=\begin{pmatrix} a & -b\\ b & a\end{pmatrix}.
+\]
+验算它确实就是"乘 $\lambda$"：对 $h=x+iy$，
+$M_\lambda\binom{x}{y}=\binom{ax-by}{bx+ay}$，而 $\lambda h=(a+ib)(x+iy)=(ax-by)+i(bx+ay)$，一致。
+
+这个对应还保持运算（逐项验证即可）：
+\[
+M_{\lambda+\mu}=M_\lambda+M_\mu,\qquad
+M_{\lambda\mu}=M_\lambda M_\mu,\qquad
+M_1=I .
+\]
+特别地，$i\longmapsto J=\begin{pmatrix}0&-1\\ 1&0\end{pmatrix}$，而
+$J^2=\begin{pmatrix}-1&0\\ 0&-1\end{pmatrix}=-I$，正好对应 $i^2=-1$。
+于是 $\lambda\mapsto M_\lambda$ 是\emph{单的环同态}，像是 $M_2(\R)$ 中与 $\C$ 同构的子环
+$\{aI+bJ:a,b\in\R\}$——这就是"把复数实现成实矩阵"。
+
+\smallskip
+\noindent\textbf{(b) 几何意义。} 把 $\lambda=re^{i\theta}$（$r=|\lambda|$，$\theta=\arg\lambda$）代入：
+\[
+M_\lambda=\begin{pmatrix} a&-b\\ b&a\end{pmatrix}
+=r\begin{pmatrix}\cos\theta&-\sin\theta\\ \sin\theta&\cos\theta\end{pmatrix}=rR_\theta,
+\]
+即"先旋转 $\theta$，再以原点为中心放大 $r$ 倍"：圆映成圆，图形只放大不变形（保角）。
+几何上这类映射叫\emph{相似变换}，所以本笔记把这种矩阵叫\textbf{旋转伸缩矩阵}
+（它与高等代数里的"相似矩阵 $B=P^{-1}AP$"无关，用词撞车的问题见第 8 节）。
+
+\smallskip
+\noindent\textbf{(c) 反过来：二元函数的"微分"就是矩阵。}
+设 $F=(F_1,\dots,F_m):\R^n\to\R^m$ 在 $\mathbf x_0$ 处可微，即存在 $m\times n$ 实矩阵 $J$ 使
+\[
+F(\mathbf x_0+\mathbf h)=F(\mathbf x_0)+J\mathbf h+o(\|\mathbf h\|)\qquad(\mathbf h\in\R^n),
+\]
+其中 $J\mathbf h$ 就是矩阵乘列向量。这样的 $J$ 若存在则唯一，它的元素正是偏导数：
+\[
+J=(J_{ij}),\qquad J_{ij}=\frac{\partial F_i}{\partial x_j}(\mathbf x_0)
+\qquad\text{即：第 }j\text{ 列}=\frac{\partial F}{\partial x_j}(\mathbf x_0).
+\]
+读法：在定义式里取 $\mathbf h=t\mathbf e_j$（只有第 $j$ 个坐标非零）、除以 $t$ 再令 $t\to0$，
+左边就是 $\partial F/\partial x_j$，右边就是 $J$ 的第 $j$ 列。
+维数只有两个数字：$n=$ 自变量个数 $=$ 列数，$m=$ 函数值的分量个数 $=$ 行数。
+
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{|l|l|l|}
+\hline
+函数 & 微分的线性映射 & 矩阵 \\
+\hline
+$f:\R\to\R$（一元） & $h\mapsto f'(x_0)h$ & $1\times1$：$\bigl[\,f'(x_0)\,\bigr]$\\
+\hline
+$f:\R^2\to\R$（二元，一个数出） & $(h_1,h_2)\mapsto f_xh_1+f_yh_2$ & $1\times2$：$\bigl[\,f_x\ \ f_y\,\bigr]$（梯度，行向量）\\
+\hline
+$F=(u,v):\R^2\to\R^2$ & $\mathbf h\mapsto J\mathbf h$ & $2\times2$：$\begin{pmatrix}u_x&u_y\\v_x&v_y\end{pmatrix}$（Jacobi 矩阵）\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent
+所以"可微"的意思就是"局部可以用一个矩阵（线性映射）逼近"。
+一元时这个矩阵是 $1\times1$，也就是熟悉的导数 $f'(x_0)$——"导数就是那个线性映射"，只是平时没这么说。
+复值函数 $f=u+iv:\C\to\C$ 落在表的第三行（看成 $\R^2\to\R^2$），
+它的矩阵写法（复数记号）要到第 3、5 节才讲。
+
+\subsubsection*{2. 一般的线性映射}
+
+先把一般定义抄一遍，再把字母换成复数。
 
 \begin{definition}[实线性映射]
-映射 $L:\C\to\C$ 称为\emph{实线性}的（也记作 $\R$-线性），若对一切 $w_1,w_2\in\C$ 与一切\emph{实数} $\alpha,\beta$ 都有
+设 $V,W$ 是实数域 $\R$ 上的线性空间（向量空间）。
+映射 $T:V\to W$ 称为\emph{实线性}的（也记作 $\R$-线性），若对一切 $u,v\in V$ 与一切\emph{实数} $\alpha,\beta$ 都有
+\[
+T(\alpha u+\beta v)=\alpha T(u)+\beta T(v).
+\]
+本笔记主要用 $V=W=\C$ 的情形：映射 $L:\C\to\C$ 实线性，即对一切 $w_1,w_2\in\C$ 与一切实数 $\alpha,\beta$，
 \[
 L(\alpha w_1+\beta w_2)=\alpha L(w_1)+\beta L(w_2).
 \]
@@ -100,10 +192,7 @@ L(\alpha w_1+\beta w_2)=\alpha L(w_1)+\beta L(w_2).
 \end{definition}
 
 \noindent
-这就是线性代数里\emph{线性映射}的一般定义（域 $K$ 上的线性空间 $V,W$：$T(\alpha u+\beta v)=\alpha T(u)+\beta T(v)$，$\forall\alpha,\beta\in K$）
-在 $V=W=\C$、$K=\R$ 时的样子，不是分析学另造的概念；条件也可以拆成
-$L(w_1+w_2)=L(w_1)+L(w_2)$ 与 $L(\alpha w)=\alpha L(w)$ 两条（合写、分写等价）。
-把"实数 $\alpha,\beta$"换成"复数"，就是复线性。
+条件也可以拆成 $L(w_1+w_2)=L(w_1)+L(w_2)$ 与 $L(\alpha w)=\alpha L(w)$ 两条（合写、分写等价）。
 
 \smallskip
 \noindent
@@ -139,17 +228,19 @@ $M_n(K)$ & 矩阵 & $X\mapsto AX-XB$\\
 \item \emph{两侧空间可以不同}：$F:\R^n\to\R^m$ 中输入的 $\mathbf h$ 是 $n$ 维列向量、输出的 $L\mathbf h$ 是 $m$ 维列向量；
 $m=1$（如 $f:\R^2\to\R$）时输出就是数。
 \item \emph{系数必须取自同一个域 $K$}：允许复数当系数是\emph{复}线性，只允许实数才是\emph{实}线性——
-这正是后面 $\C$ 与 $M_2(\R)$ 的分界。
+这正是后面 $\C$ 与 $M_2(\R)$ 的分界（也就是"全纯"比"实可微"强的地方）。
 \item $w_1,w_2$ 只是哑变量，写成 $u,v$ 或 $\mathbf x,\mathbf y$ 都一样，
 关键是"对任意两个元素、任意两个系数都成立"。
 \end{enumerate}
 
 \noindent
 本例 $V=W=\C$：$\C$ 的元素是\emph{数}，但由 $\C\ni x+iy\ \longleftrightarrow\ \binom{x}{y}\in\R^2$
-也可以把它们看成列向量，两种说法完全等价（详见第 4 节的矩阵字典与第 7 节）。
+也可以把它们看成列向量，两种说法完全等价（就是把第 1 节的矩阵词典反过来用）。
 
 例如 $L(w)=\lambda w$（$\lambda\in\C$）是复线性的（也是实线性的）；而 $L(w)=\bar w$、$L(w)=\operatorname{Re}w$、
 $L(w)=w+\bar w$ 只是实线性的，不是复线性的（试 $\alpha=i$ 即可看出）。
+
+\subsubsection*{3. $\C$ 上实线性映射的标准形}
 
 \begin{proposition}[实线性映射的标准形]\label{prop:real-linear-form}
 $L:\C\to\C$ 实线性 $\iff$ 存在唯一的一对 $A,B\in\C$ 使
@@ -188,9 +279,9 @@ L(h)=\frac{L(1)-iL(i)}{2}\,h+\frac{L(1)+iL(i)}{2}\,\bar h,
 所以"复线性"恰是 $B=0$ 的情形（$L(h)=Ah$，就是"乘一个复数"）：
 实线性映射比复线性多出一个自由参数 $B$。
 （也可以直接看出：复线性时 $L(h)=L(h\cdot 1)=hL(1)$，故只能 $L(h)=\lambda h$。）
-这正是全纯性在微分层面的含义——见命题 \ref{prop:pointwise}。
+这正是全纯性在微分层面的含义——见第 4 节与命题 \ref{prop:pointwise}。
 
-\subsubsection*{2. 实可微的两种写法}
+\subsubsection*{4. 实可微：就是数分里的"二元可微"}
 
 \begin{definition}[实可微]
 设 $f$ 在 $z_0$ 的某邻域内有定义。称 $f$ 在 $z_0$ 处\emph{实可微}，是指存在实线性映射 $L$ 使
@@ -217,7 +308,141 @@ f(z_0+h)-f(z_0)=f_x(z_0)\,x+f_y(z_0)\,y+o(|h|),
 取 $h=t\in\R$ 并除以 $t$ 得 $(L_1-L_2)(1)=0$，取 $h=it$ 得 $(L_1-L_2)(i)=0$，
 再由实线性（$L(1)=L(i)=0\Rightarrow L\equiv0$）得 $L_1=L_2$。
 
-\subsubsection*{3. "极限换序"的正当性}
+\smallskip
+\noindent
+把 $z=x+iy$ 对应到 $(x,y)$、$f=u+iv$ 对应到 $(u,v)$，两边的"可微"其实就是同一件事：
+
+\begin{center}
+\renewcommand{\arraystretch}{1.45}
+\begin{tabular}{|p{0.235\textwidth}|p{0.685\textwidth}|}
+\hline
+\textbf{数学分析：二元可微} &
+$F=(u,v):\R^2\to\R^2$：存在 $2\times2$ 实矩阵 $J$ 使
+$F(\mathbf x_0+\mathbf h)=F(\mathbf x_0)+J\mathbf h+o(|\mathbf h|)$，
+其中 $J=\begin{pmatrix}u_x&u_y\\v_x&v_y\end{pmatrix}$（Jacobi 矩阵，$4$ 个自由度）。\\
+\hline
+\textbf{复分析：实可微} &
+同一件事，改写成复数：存在实线性 $L$ 使 $f(z_0+h)=f(z_0)+L(h)+o(|h|)$，
+且 $L(h)=f_x\,x+f_y\,y=f_z\,h+f_{\bar z}\,\bar h$；一般仍是 $4$ 个实参数。\\
+\hline
+\textbf{复分析：复可导} &
+$\lim\limits_{h\to0}\dfrac{f(z_0+h)-f(z_0)}{h}$ 存在（$h$ 取\emph{复数}，可以用复数除法）；
+等价于"实可微 $+$ 微分 $L$ 复线性"，即 $f_{\bar z}(z_0)=0$（Cauchy--Riemann 方程），
+此时 $L(h)=f'(z_0)h$，只剩 $2$ 个自由度。\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent
+这张表的第三行是第 3.3 节的命题 \ref{prop:pointwise} 要证的结论，这里先列出来做对照。
+其中
+\[
+f_z=\tfrac12\bigl[(u_x+v_y)+i(v_x-u_y)\bigr],
+\qquad
+f_{\bar z}=\tfrac12\bigl[(u_x-v_y)+i(v_x+u_y)\bigr],
+\]
+所以 $f_{\bar z}(z_0)=0$ 恰好就是 $u_x=v_y$、$u_y=-v_x$。
+
+\smallskip
+\noindent
+注意区分三档（数分里也一样）：\emph{偏导存在}最弱，推不出可微；
+\emph{可微}（实可微）才有线性逼近；\emph{偏导连续}（$C^1$）是可微的常用充分条件。
+第 3.3 节的注 \ref{rem:cr-needs-differentiability} 会给出"偏导存在 $+$ C-R 但不实可微"的反例。
+
+\subsubsection*{5. 回到矩阵：复可导 $=$ 微分是旋转伸缩矩阵}
+
+\noindent\textbf{矩阵字典（复数写法 $\leftrightarrow$ 矩阵）。}
+取 $\C$ 的实基 $\{1,i\}$（即 $h=x+iy$ 对应坐标 $(x,y)$）。
+线性映射的矩阵，\emph{第 $1$ 列是 $L(1)$ 的坐标，第 $2$ 列是 $L(i)$ 的坐标}：
+\[
+L(1)=A\cdot 1+B\cdot 1=A+B=(a+c)+i(b+d),\qquad
+L(i)=Ai+B\,\bar i=i(A-B)=(d-b)+i(a-c),
+\]
+于是
+\[
+L(h)=Ah+B\bar h\ \longleftrightarrow\ \begin{pmatrix} a+c & d-b\\ b+d & a-c\end{pmatrix},
+\qquad \det L=|A|^2-|B|^2 .
+\]
+直接验算也一样：$L(h)=(a+ib)(x+iy)+(c+id)(x-iy)
+=\bigl[(a+c)x+(d-b)y\bigr]+i\bigl[(b+d)x+(a-c)y\bigr]$，比较 $x,y$ 的系数即得上面这个矩阵。
+反过来从矩阵读回 $A,B$：$A=\dfrac{L(1)-iL(i)}{2}$，$B=\dfrac{L(1)+iL(i)}{2}$，即命题 \ref{prop:real-linear-form}。
+
+\smallskip
+\noindent
+\emph{例。} $A=2+i$、$B=1-3i$（即 $a=2,b=1,c=1,d=-3$），则
+$L\longleftrightarrow\begin{pmatrix}3&-4\\-2&1\end{pmatrix}$，$\det L=3\cdot1-(-4)(-2)=-5$；
+而 $|A|^2-|B|^2=5-10=-5$，两者一致。这里 $\det L<0$，说明这个 $L$ 把定向翻转了——
+一般的实线性映射允许如此（剪切、非均匀拉伸、翻转都可以）。
+
+\smallskip
+\noindent
+$B=0$（复线性）时矩阵化为\emph{旋转伸缩矩阵}：若 $A=re^{i\theta}$，则
+\[
+L(h)=Ah\ \longleftrightarrow\ \begin{pmatrix} a & -b\\ b & a\end{pmatrix}
+=r\begin{pmatrix}\cos\theta & -\sin\theta\\ \sin\theta & \cos\theta\end{pmatrix},
+\qquad \det L=|A|^2=r^2>0,
+\]
+即"旋转 $\theta$ 再伸缩 $r$"：它把圆映成圆，因而保角。
+这与第 1 节 (b) 里"乘 $\lambda$ 就是旋转加伸缩"是同一件事，只是这里 $A$ 是微分。
+
+\smallskip
+\noindent
+而 $f$ 的 Jacobi 矩阵 $\begin{pmatrix}u_x&u_y\\v_x&v_y\end{pmatrix}$ 在 Cauchy--Riemann 方程成立时
+恰好是这个形状（$u_x=v_y=a$，$u_y=-v_x=-b$），于是
+\[
+\det J=u_xv_y-u_yv_x=a^2+b^2=|f'(z_0)|^2\ \ge\ 0 .
+\]
+也就是说：复可导时，微分的面积伸缩因子恰是 $|f'(z_0)|^2$，而且绝不翻转定向；一般二元可微则允许 $\det J<0$。
+
+\smallskip
+\noindent
+一句话：\textbf{复可导 $=$ 二元可微（实可微）$+$ 微分是复线性}。
+复可导一定实可微（把 $f'(z_0)h$ 看成线性映射即可），反之不然（注 \ref{rem:cr-needs-differentiability}）。
+两组式子的差别全在那个 $i$：微分允许是"任意线性变换"，还是只允许是"乘复数"。
+
+\smallskip
+\noindent
+顺带说明为什么二元函数不能用"差商有极限"来定义可微：$\R^2$ 里没有"除以向量"，只能借助线性映射；
+而复情形有复数除法，于是线性映射被逼成"乘一个复数"。
+
+\subsubsection*{6. 与矩阵环 $M_n(K)$ 的联系}
+
+高等代数里的 $M_n(K)$（$K$ 上 $n$ 阶方阵，按加法与乘法成环）在这里正好就是"线性映射全体"：
+\[
+\operatorname{End}_K(K^n)\longrightarrow M_n(K),\qquad \varphi\longmapsto \varphi\ \text{在标准基下的矩阵}
+\]
+是\emph{环同构}（保持加法、乘法与单位阵：映射的复合对应矩阵乘法）。
+于是"可微 $=$ 存在线性映射"这句话，在\emph{进 $n$ 个数、出 $n$ 个数}时就可以读成"微分是 $M_n(K)$ 中的一个元素"。
+
+$\C$ 的情形：把 $\C$ 看成二维 $\R$-向量空间，则 $\operatorname{End}_\R(\C)\cong M_2(\R)$。
+"乘复数" $\lambda=a+ib$ 所对应的矩阵就是第 1 节 (a) 里的 $M_\lambda=aI+bJ$：
+\[
+m_\lambda\ \longleftrightarrow\ \begin{pmatrix} a & -b\\ b & a\end{pmatrix}=aI+bJ,
+\qquad J=\begin{pmatrix}0&-1\\ 1&0\end{pmatrix},\quad J^2=-I,
+\]
+因此 $\lambda\mapsto aI+bJ$ 是单环同态，像是 $M_2(\R)$ 中同构于 $\C$ 的子环
+$\C\cong\{aI+bJ:a,b\in\R\}$（$I$ 对应 $1$，$J$ 对应 $i$）。
+注意 $M_2(\R)$ 非交换，而这个子环是域：交换、非零元全可逆，$\det(aI+bJ)=a^2+b^2$。
+
+于是复分析的两句话可以这样记：
+\begin{itemize}[leftmargin=1.6em]
+\item \textbf{实可微}：微分 $L\in\operatorname{End}_\R(\C)\cong M_2(\R)$，可以是任意矩阵；
+\item \textbf{复可导}：微分 $L$ 落在子环 $\{aI+bJ\}\cong\C$ 里（即"乘复数"），
+等价于 $L(h)=Ah+B\bar h$ 中 $B=0$，等价于 Cauchy--Riemann 方程。
+\end{itemize}
+
+\noindent
+对照着看：共轭 $h\mapsto\bar h$ 对应 $M_2(\R)$ 中的 $\begin{pmatrix}1&0\\0&-1\end{pmatrix}$，
+它\emph{不在}子环 $\{aI+bJ\}$ 里，所以共轭不是复线性的——这就是注 \ref{rem:bar-term} 里 $\bar f$ 那一项
+$\dfrac{\partial g}{\partial\bar w}\dfrac{\partial\bar f}{\partial z}$ 的代数来源。
+
+\smallskip
+\noindent
+最后补一句维数："进 $n$ 个数、出 $m$ 个数"时微分属于 $M_{m\times n}(K)$，它一般\emph{不是}环
+（$m\neq n$ 时乘法不封闭），只是向量空间；只有 $m=n$（如复值函数 $f=u+iv:\R^2\to\R^2$）才落回 $M_n(K)$。
+例如二元的 $f:\R^2\to\R$（一个数出），微分是 $1\times2$ 的 $\bigl[\,f_x\ f_y\,\bigr]$，不是环的元素。
+
+\subsubsection*{7. 工具：极限换序}
 
 \begin{proposition}[复合函数的极限]\label{prop:limit-composition}
 设 $\lim\limits_{h\to0}w(h)=L$，且 $F$ 在 $L$ 处连续，则 $\lim\limits_{h\to0}F\bigl(w(h)\bigr)=F(L)$。
@@ -245,215 +470,18 @@ F(w)=|w|:\quad\bigl||w|-|L|\bigr|\le|w-L| .
 命题 \ref{prop:conj} 也可以用它一句话说完：共轭连续，故 $\overline{\partial_x f}=\partial_x\bar f$
 （先把差商取共轭再取极限，与先取极限再取共轭，是同一件事）。
 
-\subsubsection*{4. 与数学分析的"二元可微"对照}
+\subsubsection*{8. 术语与符号约定}
 
-把 $z=x+iy$ 对应到 $(x,y)$，$f=u+iv$ 对应到 $(u,v)$，则 $\C\to\C$ 的映射就是 $\R^2\to\R^2$ 的映射；
-数学分析的"二元可微"与这里的"实可微"是\emph{同一件事}，只是写法不同。
-
-\begin{center}
-\renewcommand{\arraystretch}{1.45}
-\begin{tabular}{|p{0.235\textwidth}|p{0.685\textwidth}|}
-\hline
-\textbf{数学分析：二元可微} &
-$F=(u,v):\R^2\to\R^2$：存在 $2\times2$ 实矩阵 $J$ 使
-$F(\mathbf x_0+\mathbf h)=F(\mathbf x_0)+J\mathbf h+o(|\mathbf h|)$，
-其中 $J=\begin{pmatrix}u_x&u_y\\v_x&v_y\end{pmatrix}$（Jacobi 矩阵，$4$ 个自由度）。\\
-\hline
-\textbf{复分析：实可微} &
-同一件事，改写成复数：存在实线性 $L$ 使 $f(z_0+h)=f(z_0)+L(h)+o(|h|)$，
-且 $L(h)=f_x\,x+f_y\,y=f_z\,h+f_{\bar z}\,\bar h$；一般仍是 $4$ 个实参数。\\
-\hline
-\textbf{复分析：复可导} &
-$\lim\limits_{h\to0}\dfrac{f(z_0+h)-f(z_0)}{h}$ 存在（$h$ 取\emph{复数}，可以用复数除法）。
-等价于"实可微 $+$ 微分 $L$ 复线性"，即 $f_{\bar z}(z_0)=0$（Cauchy--Riemann 方程）；
-此时 $L(h)=f'(z_0)h$，只剩 $2$ 个自由度。\\
-\hline
-\end{tabular}
-\end{center}
-
-\noindent
-其中
-\[
-f_z=\tfrac12\bigl[(u_x+v_y)+i(v_x-u_y)\bigr],
-\qquad
-f_{\bar z}=\tfrac12\bigl[(u_x-v_y)+i(v_x+u_y)\bigr],
-\]
-所以 $f_{\bar z}(z_0)=0$ 恰好就是 $u_x=v_y$、$u_y=-v_x$。
-
-\smallskip
-\noindent
-\textbf{矩阵字典。} 取 $\C$ 的实基 $\{1,i\}$（即 $h=x+iy$ 对应坐标 $(x,y)$）。
-线性映射的矩阵，\emph{第 $1$ 列是 $L(1)$ 的坐标，第 $2$ 列是 $L(i)$ 的坐标}：
-\[
-L(1)=A\cdot 1+B\cdot 1=A+B=(a+c)+i(b+d),\qquad
-L(i)=Ai+B\,\bar i=i(A-B)=(d-b)+i(a-c),
-\]
-于是
-\[
-L(h)=Ah+B\bar h\ \longleftrightarrow\ \begin{pmatrix} a+c & d-b\\ b+d & a-c\end{pmatrix},
-\qquad \det L=|A|^2-|B|^2 .
-\]
-直接验算也一样：$L(h)=(a+ib)(x+iy)+(c+id)(x-iy)
-=\bigl[(a+c)x+(d-b)y\bigr]+i\bigl[(b+d)x+(a-c)y\bigr]$，比较 $x,y$ 的系数即得上面这个矩阵。
-反过来从矩阵读回 $A,B$：$A=\dfrac{L(1)-iL(i)}{2}$，$B=\dfrac{L(1)+iL(i)}{2}$，即命题 \ref{prop:real-linear-form}。
-
-\smallskip
-\noindent
-\emph{例。} $A=2+i$、$B=1-3i$（即 $a=2,b=1,c=1,d=-3$），则
-$L\longleftrightarrow\begin{pmatrix}3&-4\\-2&1\end{pmatrix}$，$\det L=3\cdot1-(-4)(-2)=-5$；
-而 $|A|^2-|B|^2=5-10=-5$，两者一致。这里 $\det L<0$，说明这个 $L$ 把定向翻转了——
-一般的实线性映射允许如此（剪切、非均匀拉伸、翻转都可以）。
-
-\smallskip
-\noindent
-$B=0$（复线性）时矩阵化为\emph{旋转伸缩矩阵}（形如 $rR_\theta$，见下面第 7 节；注意这不是高等代数里"相似矩阵 $B=P^{-1}AP$"的意思，那里用词撞车了）：若 $A=re^{i\theta}$，则
-\[
-L(h)=Ah\ \longleftrightarrow\ \begin{pmatrix} a & -b\\ b & a\end{pmatrix}
-=r\begin{pmatrix}\cos\theta & -\sin\theta\\ \sin\theta & \cos\theta\end{pmatrix},
-\qquad \det L=|A|^2=r^2>0,
-\]
-即"旋转 $\theta$ 再伸缩 $r$"：它把圆映成圆，因而保角。而 $f$ 的 Jacobi 矩阵
-$\begin{pmatrix}u_x&u_y\\v_x&v_y\end{pmatrix}$ 在 Cauchy--Riemann 方程成立时恰好是这个形状
-（$u_x=v_y=a$，$u_y=-v_x=-b$），于是
-\[
-\det J=u_xv_y-u_yv_x=a^2+b^2=|f'(z_0)|^2\ \ge\ 0 .
-\]
-也就是说：复可导时，微分的面积伸缩因子恰是 $|f'(z_0)|^2$，而且绝不翻转定向；一般二元可微则允许 $\det J<0$。
-
-\smallskip
-\noindent
-一句话：\textbf{复可导 $=$ 二元可微（实可微）$+$ 微分是复线性}。
-复可导一定实可微（把 $f'(z_0)h$ 看成线性映射即可），反之不然（注 \ref{rem:cr-needs-differentiability}）；
-两者的差别全在那个 $i$：微分允许是"任意线性变换"，还是只允许是"乘复数"。
-
-\subsubsection*{5. 二元（乃至 $n$ 元）函数时，"线性映射"具体是什么}
-
-线性映射是"没选坐标"的说法；在 $\R^n$、$\R^m$ 里取标准基之后，它就是一个矩阵。
-设 $F=(F_1,\dots,F_m):\R^n\to\R^m$，$\mathbf x=(x_1,\dots,x_n)$。$F$ 在 $\mathbf x_0$ 可微，是指存在一个 $m\times n$ 实矩阵 $J$ 使
-\[
-F(\mathbf x_0+\mathbf h)=F(\mathbf x_0)+J\mathbf h+o(\|\mathbf h\|)\qquad(\mathbf h\in\R^n),
-\]
-其中 $J\mathbf h$ 就是矩阵乘列向量。这样的 $J$ 若存在则唯一，它的元素正是偏导数：
-\[
-J=(J_{ij}),\qquad J_{ij}=\frac{\partial F_i}{\partial x_j}(\mathbf x_0)\quad(1\le i\le m,\ 1\le j\le n),
-\]
-即\emph{第 $j$ 列就是 $\dfrac{\partial F}{\partial x_j}(\mathbf x_0)$}。
-读法：在定义式里取 $\mathbf h=t\mathbf e_j$（只有第 $j$ 个坐标非零）、两边除以 $t$ 再令 $t\to0$，
-左边就是 $\dfrac{\partial F}{\partial x_j}(\mathbf x_0)$，右边就是 $J$ 的第 $j$ 列。
-
-维数只有两个数字：$n=$ 自变量的个数 $=$ 列数，$m=$ 函数值的分量个数 $=$ 行数，不会有第三个数字。
-
-\begin{center}
-\renewcommand{\arraystretch}{1.4}
-\begin{tabular}{|l|l|l|}
-\hline
-函数 & 微分的线性映射 & 矩阵 \\
-\hline
-$f:\R\to\R$（一元） & $h\mapsto f'(x_0)h$ & $1\times1$：$\bigl[\,f'(x_0)\,\bigr]$\\
-\hline
-$f:\R^2\to\R$（二元，一个数出） & $(h_1,h_2)\mapsto f_xh_1+f_yh_2$ & $1\times2$：$\bigl[\,f_x\ \ f_y\,\bigr]$（梯度，行向量）\\
-\hline
-$F=(u,v):\R^2\to\R^2$ & $\mathbf h\mapsto J\mathbf h$ & $2\times2$：$\begin{pmatrix}u_x&u_y\\v_x&v_y\end{pmatrix}$（Jacobi 矩阵）\\
-\hline
-$f:\C\to\C$（看作 $\R^2\to\R^2$） & $h\mapsto Ah+B\bar h$ & $2\times2$：$\begin{pmatrix}a+c&d-b\\ b+d&a-c\end{pmatrix}$\\
-\hline
-\end{tabular}
-\end{center}
-
-\noindent
-表中最后一行是前一行在复数记号下的写法（$A=a+ib$，$B=c+id$）。复可导就是这一行的矩阵恰为旋转伸缩矩阵
-$\begin{pmatrix}a&-b\\ b&a\end{pmatrix}$（即 $B=0$）的情形；一般的"二元可微"允许它是任意 $2\times2$ 矩阵。
-顺带说明为什么二元函数不能用"差商有极限"来定义可微：$\R^2$ 里没有"除以向量"，只能借助线性映射；
-而复情形有复数除法，于是线性映射被逼成"乘一个复数"。
-
-\subsubsection*{6. 与矩阵环 $M_n(K)$ 的联系}
-
-高等代数里的 $M_n(K)$（$K$ 上 $n$ 阶方阵，按加法与乘法成环）在这里正好就是"线性映射全体"：
-\[
-\operatorname{End}_K(K^n)\longrightarrow M_n(K),\qquad \varphi\longmapsto \varphi\ \text{在标准基下的矩阵}
-\]
-是\emph{环同构}（保持加法、乘法与单位阵：映射的复合对应矩阵乘法）。
-于是"可微 $=$ 存在线性映射"这句话，在\emph{进 $n$ 个数、出 $n$ 个数}时就可以读成"微分是 $M_n(K)$ 中的一个元素"。
-
-$\C$ 的情形：把 $\C$ 看成二维 $\R$-向量空间，则 $\operatorname{End}_\R(\C)\cong M_2(\R)$。
-"乘复数" $\lambda=a+ib$ 所对应的矩阵是
-\[
-m_\lambda\ \longleftrightarrow\ \begin{pmatrix} a & -b\\ b & a\end{pmatrix}=aI+bJ,
-\qquad J=\begin{pmatrix}0&-1\\ 1&0\end{pmatrix},\quad J^2=-I,
-\]
-因此 $\lambda\mapsto aI+bJ$ 是单环同态，像是 $M_2(\R)$ 中同构于 $\C$ 的子环
-$\C\cong\{aI+bJ:a,b\in\R\}$（$I$ 对应 $1$，$J$ 对应 $i$）。
-注意 $M_2(\R)$ 非交换，而这个子环是域：交换、非零元全可逆，$\det(aI+bJ)=a^2+b^2$。
-
-于是复分析的两句话可以这样记：
-\begin{itemize}[leftmargin=1.6em]
-\item \textbf{实可微}：微分 $L\in\operatorname{End}_\R(\C)\cong M_2(\R)$，可以是任意矩阵；
-\item \textbf{复可导}：微分 $L$ 落在子环 $\{aI+bJ\}\cong\C$ 里（即"乘复数"），
-等价于 $L(h)=Ah+B\bar h$ 中 $B=0$，等价于 Cauchy--Riemann 方程。
-\end{itemize}
-
-\noindent
-对照着看：共轭 $h\mapsto\bar h$ 对应 $M_2(\R)$ 中的 $\begin{pmatrix}1&0\\0&-1\end{pmatrix}$，
-它\emph{不在}子环 $\{aI+bJ\}$ 里，所以共轭不是复线性的——这就是注 \ref{rem:bar-term} 里 $\bar f$ 那一项
-$\dfrac{\partial g}{\partial\bar w}\dfrac{\partial\bar f}{\partial z}$ 的代数来源。
-
-\smallskip
-\noindent
-最后补一句维数："进 $n$ 个数、出 $m$ 个数"时微分属于 $M_{m\times n}(K)$，它一般\emph{不是}环
-（$m\neq n$ 时乘法不封闭），只是向量空间；只有 $m=n$（如复值函数 $f=u+iv:\R^2\to\R^2$）才落回 $M_n(K)$。
-例如二元的 $f:\R^2\to\R$（一个数出），微分是 $1\times2$ 的 $\bigl[\,f_x\ f_y\,\bigr]$，不是环的元素。
-
-\subsubsection*{7. 慢一点：复数怎么变成矩阵、"相似"这个词、以及各种箭头}
-
-（第 6 节已经从"环"的角度说过一次，这里把最基础的一步从头再写一遍。）
-
-\noindent\textbf{(a) 复数 $\to$ 矩阵。}
-固定 $\lambda=a+ib\in\C$。"乘 $\lambda$"是 $\C$ 上的一个映射 $h\mapsto\lambda h$；
-把它写成 $\R^2$ 上的矩阵，用的就是"两列 $=$ 两个基向量的像"这条算法：
-\[
-\lambda\cdot 1=\lambda=a+ib\ \Longrightarrow\ \text{第 1 列}=\binom{a}{b},
-\qquad
-\lambda\cdot i=i\lambda=-b+ia\ \Longrightarrow\ \text{第 2 列}=\binom{-b}{a},
-\]
-所以
-\[
-\lambda=a+ib\ \longmapsto\ M_\lambda=\begin{pmatrix} a & -b\\ b & a\end{pmatrix}.
-\]
-验算它确实就是"乘 $\lambda$"：对 $h=x+iy$，
-$M_\lambda\binom{x}{y}=\binom{ax-by}{bx+ay}$，而 $\lambda h=(a+ib)(x+iy)=(ax-by)+i(bx+ay)$，一致。
-
-这个对应还保持运算（逐项验证即可）：
-\[
-M_{\lambda+\mu}=M_\lambda+M_\mu,\qquad
-M_{\lambda\mu}=M_\lambda M_\mu,\qquad
-M_1=I .
-\]
-特别地，$i\longmapsto J=\begin{pmatrix}0&-1\\ 1&0\end{pmatrix}$，而
-$J^2=\begin{pmatrix}-1&0\\ 0&-1\end{pmatrix}=-I$，正好对应 $i^2=-1$。
-于是 $\lambda\mapsto M_\lambda$ 是\emph{单的环同态}，像是 $M_2(\R)$ 中与 $\C$ 同构的子环
-$\{aI+bJ:a,b\in\R\}$——这就是"把复数实现成实矩阵"。
-
-\medskip
-\noindent\textbf{(b) 几何意义。} 把 $\lambda=re^{i\theta}$（$r=|\lambda|$，$\theta=\arg\lambda$）代入：
-\[
-M_\lambda=\begin{pmatrix} a&-b\\ b&a\end{pmatrix}
-=r\begin{pmatrix}\cos\theta&-\sin\theta\\ \sin\theta&\cos\theta\end{pmatrix}=rR_\theta,
-\]
-即"先旋转 $\theta$，再以原点为中心放大 $r$ 倍"。
-这类映射把圆映成圆、图形只放大不变形（保角），几何上叫\emph{相似变换}，
-所以笔记里把这种矩阵叫\textbf{旋转伸缩矩阵}。
-
-\medskip
-\noindent\textbf{(c) "相似矩阵"这个词有两套意思（我前面混用了，抱歉）。}
+\noindent\textbf{(a) "相似矩阵"有两套意思，注意别混。}
 \begin{itemize}[leftmargin=1.6em]
 \item 几何上的\emph{相似变换}：旋转 $+$ 均匀伸缩，矩阵形如 $rR_\theta=\begin{pmatrix}a&-b\\ b&a\end{pmatrix}$。
-本笔记一律叫它\textbf{旋转伸缩矩阵}，以免与下面撞车。
+本笔记一律叫它\textbf{旋转伸缩矩阵}。
 \item 高等代数里的\emph{相似矩阵}：$B=P^{-1}AP$（$P$ 可逆），意思是"同一个线性变换在两组不同基下的矩阵"，
 关心的是能不能对角化、有没有最简形式，与"形状是不是旋转伸缩"没有关系。
 \end{itemize}
 
 \medskip
-\noindent\textbf{(d) 符号表（本笔记里常用的几个箭头）。}
+\noindent\textbf{(b) 常用箭头。}
 \begin{center}
 \renewcommand{\arraystretch}{1.3}
 \begin{tabular}{|c|l|p{0.52\textwidth}|}
