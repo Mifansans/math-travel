@@ -263,7 +263,7 @@ $L\longleftrightarrow\begin{pmatrix}3&-4\\-2&1\end{pmatrix}$，$\det L=3\cdot1-(
 
 \smallskip
 \noindent
-$B=0$（复线性）时矩阵化为\emph{相似矩阵}：若 $A=re^{i\theta}$，则
+$B=0$（复线性）时矩阵化为\emph{旋转伸缩矩阵}（形如 $rR_\theta$，见下面第 7 节；注意这不是高等代数里"相似矩阵 $B=P^{-1}AP$"的意思，那里用词撞车了）：若 $A=re^{i\theta}$，则
 \[
 L(h)=Ah\ \longleftrightarrow\ \begin{pmatrix} a & -b\\ b & a\end{pmatrix}
 =r\begin{pmatrix}\cos\theta & -\sin\theta\\ \sin\theta & \cos\theta\end{pmatrix},
@@ -318,7 +318,7 @@ $f:\C\to\C$（看作 $\R^2\to\R^2$） & $h\mapsto Ah+B\bar h$ & $2\times2$：$\b
 \end{center}
 
 \noindent
-表中最后一行是前一行在复数记号下的写法（$A=a+ib$，$B=c+id$）。复可导就是这一行的矩阵恰为相似矩阵
+表中最后一行是前一行在复数记号下的写法（$A=a+ib$，$B=c+id$）。复可导就是这一行的矩阵恰为旋转伸缩矩阵
 $\begin{pmatrix}a&-b\\ b&a\end{pmatrix}$（即 $B=0$）的情形；一般的"二元可微"允许它是任意 $2\times2$ 矩阵。
 顺带说明为什么二元函数不能用"差商有极限"来定义可微：$\R^2$ 里没有"除以向量"，只能借助线性映射；
 而复情形有复数除法，于是线性映射被逼成"乘一个复数"。
@@ -359,6 +359,81 @@ $\dfrac{\partial g}{\partial\bar w}\dfrac{\partial\bar f}{\partial z}$ 的代数
 最后补一句维数："进 $n$ 个数、出 $m$ 个数"时微分属于 $M_{m\times n}(K)$，它一般\emph{不是}环
 （$m\neq n$ 时乘法不封闭），只是向量空间；只有 $m=n$（如复值函数 $f=u+iv:\R^2\to\R^2$）才落回 $M_n(K)$。
 例如二元的 $f:\R^2\to\R$（一个数出），微分是 $1\times2$ 的 $\bigl[\,f_x\ f_y\,\bigr]$，不是环的元素。
+
+\subsubsection*{7. 慢一点：复数怎么变成矩阵、"相似"这个词、以及各种箭头}
+
+（第 6 节已经从"环"的角度说过一次，这里把最基础的一步从头再写一遍。）
+
+\noindent\textbf{(a) 复数 $\to$ 矩阵。}
+固定 $\lambda=a+ib\in\C$。"乘 $\lambda$"是 $\C$ 上的一个映射 $h\mapsto\lambda h$；
+把它写成 $\R^2$ 上的矩阵，用的就是"两列 $=$ 两个基向量的像"这条算法：
+\[
+\lambda\cdot 1=\lambda=a+ib\ \Longrightarrow\ \text{第 1 列}=\binom{a}{b},
+\qquad
+\lambda\cdot i=i\lambda=-b+ia\ \Longrightarrow\ \text{第 2 列}=\binom{-b}{a},
+\]
+所以
+\[
+\lambda=a+ib\ \longmapsto\ M_\lambda=\begin{pmatrix} a & -b\\ b & a\end{pmatrix}.
+\]
+验算它确实就是"乘 $\lambda$"：对 $h=x+iy$，
+$M_\lambda\binom{x}{y}=\binom{ax-by}{bx+ay}$，而 $\lambda h=(a+ib)(x+iy)=(ax-by)+i(bx+ay)$，一致。
+
+这个对应还保持运算（逐项验证即可）：
+\[
+M_{\lambda+\mu}=M_\lambda+M_\mu,\qquad
+M_{\lambda\mu}=M_\lambda M_\mu,\qquad
+M_1=I .
+\]
+特别地，$i\longmapsto J=\begin{pmatrix}0&-1\\ 1&0\end{pmatrix}$，而
+$J^2=\begin{pmatrix}-1&0\\ 0&-1\end{pmatrix}=-I$，正好对应 $i^2=-1$。
+于是 $\lambda\mapsto M_\lambda$ 是\emph{单的环同态}，像是 $M_2(\R)$ 中与 $\C$ 同构的子环
+$\{aI+bJ:a,b\in\R\}$——这就是"把复数实现成实矩阵"。
+
+\medskip
+\noindent\textbf{(b) 几何意义。} 把 $\lambda=re^{i\theta}$（$r=|\lambda|$，$\theta=\arg\lambda$）代入：
+\[
+M_\lambda=\begin{pmatrix} a&-b\\ b&a\end{pmatrix}
+=r\begin{pmatrix}\cos\theta&-\sin\theta\\ \sin\theta&\cos\theta\end{pmatrix}=rR_\theta,
+\]
+即"先旋转 $\theta$，再以原点为中心放大 $r$ 倍"。
+这类映射把圆映成圆、图形只放大不变形（保角），几何上叫\emph{相似变换}，
+所以笔记里把这种矩阵叫\textbf{旋转伸缩矩阵}。
+
+\medskip
+\noindent\textbf{(c) "相似矩阵"这个词有两套意思（我前面混用了，抱歉）。}
+\begin{itemize}[leftmargin=1.6em]
+\item 几何上的\emph{相似变换}：旋转 $+$ 均匀伸缩，矩阵形如 $rR_\theta=\begin{pmatrix}a&-b\\ b&a\end{pmatrix}$。
+本笔记一律叫它\textbf{旋转伸缩矩阵}，以免与下面撞车。
+\item 高等代数里的\emph{相似矩阵}：$B=P^{-1}AP$（$P$ 可逆），意思是"同一个线性变换在两组不同基下的矩阵"，
+关心的是能不能对角化、有没有最简形式，与"形状是不是旋转伸缩"没有关系。
+\end{itemize}
+
+\medskip
+\noindent\textbf{(d) 符号表（本笔记里常用的几个箭头）。}
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{|c|l|p{0.52\textwidth}|}
+\hline
+符号 & 读法 & 意思\\
+\hline
+$f:X\to Y$ & 映射 & 声明 $f$ 把 $X$ 中的元素送到 $Y$ 中（定义域、值域）\\
+\hline
+$x\mapsto f(x)$ & 对应 & 具体元素被送到哪个元素（"送法"）\\
+\hline
+$L\ \longleftrightarrow\ M$ & 一一对应 & 左右是\emph{同一个对象}的两种写法（这里是同一线性映射的复数写法与矩阵写法）\\
+\hline
+$A\iff B$ & 当且仅当 & 命题 $A$、$B$ 互为充要条件\\
+\hline
+$A\Rightarrow B$ & 推出 & 由 $A$ 可推出 $B$\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent
+最容易看错的是 $\longleftrightarrow$：它既不是"推出"也不是"等价于"，而是"词典里两边对译"。
+比如 $L(h)=Ah+B\bar h\ \longleftrightarrow\ \begin{pmatrix}a+c&d-b\\ b+d&a-c\end{pmatrix}$
+的意思是：左边这个映射用矩阵写出来就是右边那个矩阵，反之亦然（$A,B$ 与四个矩阵元一一对应）。
 
 \subsection{全纯的等价刻画（Cauchy--Riemann 方程）}
 
