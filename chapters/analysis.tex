@@ -1,8 +1,781 @@
 \section{数学分析}
 
-\subsection{极限}
+\subsection{曲线坐标系：拉梅系数与雅可比矩阵}
 
-\begin{definition}[数列极限]
-设 $\{a_n\}$ 是实数列，$A \in \mathbb{R}$。若对任意 $\varepsilon > 0$，存在 $N \in \mathbb{N}$，使得当 $n > N$ 时，$|a_n - A| < \varepsilon$，则称 $\{a_n\}$ 收敛于 $A$。
+\subsubsection{问题的提出}
+
+在 \(\R^2\) 中做二重积分时，把直角坐标 \((x,y)\) 换成极坐标 \((r,\theta)\)，面积元要从 \(\mathrm{d}x\,\mathrm{d}y\) 换成 \(r\,\mathrm{d}r\,\mathrm{d}\theta\)，多出来的因子 \(r\) 究竟从哪里来？在 \(\R^3\) 中换成球坐标时，体积元变成 \(\rho^2\sin\varphi\,\mathrm{d}\rho\,\mathrm{d}\varphi\,\mathrm{d}\theta\)，因子又是 \(\rho^2\sin\varphi\)。这些“多出来的因子”既不是随意的约定，也不是凭记忆硬背的公式，它们由两件事完全决定：
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{拉梅系数}（Lamé coefficients）\(h_i\)：描述“坐标 \(u_i\) 变化一个单位，空间中实际走过多少弧长”，是纯粹的\emph{度量}信息；
+  \item \textbf{雅可比矩阵} \(\dfrac{\partial(x,y,z)}{\partial(u_1,u_2,u_3)}\)：描述坐标变换的\emph{局部线性化}，它的行列式给出体积的局部伸缩率。
+\end{enumerate}
+
+当坐标系是\emph{正交}的（三族坐标曲线两两垂直，这是本书遇到的绝大多数情形）时，这两个量之间有一个极简洁的关系：雅可比行列式的绝对值恰好等于三个拉梅系数之积。本节把这两个概念、它们的关系以及用处逐条写清楚。
+
+\noindent\textbf{阅读指引.} 本节中两个核心结论是“\emph{雅可比行列式的几何意义}”（定理 \ref{thm:jacobian-volume}）与“\emph{雅可比行列式为零的判别}”（定理 \ref{thm:jacobian-dependence}）。它们都用到一些在通常教材里被一带而过的工具（平行体的体积、Gram 行列式、函数相关、秩），因此本节把这些工具单独写成引理、定义与注，并配上反例；初读时可以先跳过证明，只抓“几何意义”与两个反例。若只想要可直接使用的结论，可径直到 \S2.1.4 的关系定理与 \S2.1.6 的算子公式。
+
+\subsubsection{曲线坐标与位置向量}
+
+\begin{definition}[曲线坐标]
+设 \(\Omega\subseteq\R^3\) 是开集，\(\Phi:\Omega\to\R^3\) 是连续可微的单射，
+\[
+(x,y,z)=\Phi(u,v,w)=\bigl(x(u,v,w),\,y(u,v,w),\,z(u,v,w)\bigr).
+\]
+若在 \(\Omega\) 内处处 \(\det\dfrac{\partial(x,y,z)}{\partial(u,v,w)}\ne0\)，则称 \((u,v,w)\) 为 \(\Omega\) 上（或 \(\Phi(\Omega)\) 上）的一组\emph{曲线坐标}（curvilinear coordinates），\(\Phi\) 称为相应的坐标变换。
 \end{definition}
 
+\begin{definition}[坐标曲线、坐标曲面、标架]
+固定 \((u,v,w)\) 中的两个坐标、只让第三个变化，得到的曲线称为\emph{坐标曲线}：
+\[
+u\text{-曲线}:\ t\mapsto\Phi(t,v,w),\qquad
+v\text{-曲线}:\ t\mapsto\Phi(u,t,w),\qquad
+w\text{-曲线}:\ t\mapsto\Phi(u,v,t).
+\]
+固定一个坐标为常数所得的三张曲面称为\emph{坐标曲面}。三个偏导向量
+\[
+\Phi_u=\frac{\partial\Phi}{\partial u},\qquad
+\Phi_v=\frac{\partial\Phi}{\partial v},\qquad
+\Phi_w=\frac{\partial\Phi}{\partial w}
+\]
+分别与对应的坐标曲线相切（分别是 \(u\)-、\(v\)-、\(w\)-曲线的切向量），并且因为雅可比行列式不为零，它们线性无关，构成 \(\R^3\) 中的一组基，称为局部\emph{标架}。
+\end{definition}
+
+\begin{definition}[拉梅系数]
+在曲线坐标 \((u,v,w)\) 下，称
+\[
+\boxed{\;h_u=\left|\Phi_u\right|=\sqrt{x_u^2+y_u^2+z_u^2},\quad
+h_v=\left|\Phi_v\right|=\sqrt{x_v^2+y_v^2+z_v^2},\quad
+h_w=\left|\Phi_w\right|=\sqrt{x_w^2+y_w^2+z_w^2}\;}
+\]
+为三个\emph{拉梅系数}（Lamé coefficients），也称\emph{度规系数}、\emph{尺度因子}（scale factors）。
+\end{definition}
+
+\noindent\textbf{几何意义（这是理解拉梅系数的关键）.} 设 \(u\)-曲线上坐标从 \(u\) 变到 \(u+\mathrm{d}u\)，则位置向量的改变量为
+\[
+\Phi(u+\mathrm{d}u,v,w)-\Phi(u,v,w)\approx\Phi_u\,\mathrm{d}u ,
+\]
+其长度为 \(h_u\,\mathrm{d}u\)。也就是说
+\[
+\text{沿 }u_i\text{-曲线走过弧长 }=\;h_i\,\mathrm{d}u_i\qquad(i=1,2,3),
+\]
+\textbf{\(h_i\) 正是“坐标分量微分 \(\mathrm{d}u_i\)”与“真实弧长”之间的换算比例}。特别地，若 \(h_u=h_v=h_w=1\) 且三向量两两垂直，则这组坐标就是直角坐标；此时长度、面积、体积的表达式与直角坐标完全一致。
+
+\begin{definition}[正交曲线坐标]
+若在每一点，三个偏导向量 \(\Phi_u,\Phi_v,\Phi_w\) 两两正交，即
+\[
+\Phi_u\cdot\Phi_v=\Phi_v\cdot\Phi_w=\Phi_w\cdot\Phi_u=0 ,
+\]
+则称 \((u,v,w)\) 为\emph{正交曲线坐标}。此时令
+\[
+\mathbf{e}_u=\frac{\Phi_u}{h_u},\qquad
+\mathbf{e}_v=\frac{\Phi_v}{h_v},\qquad
+\mathbf{e}_w=\frac{\Phi_w}{h_w},
+\]
+得一组单位正交基，称为\emph{局部正交标架}（活动标架）。若进一步 \(\det(\Phi_u,\Phi_v,\Phi_w)>0\)，则称它为右手的。
+\end{definition}
+
+\subsubsection{雅可比矩阵与雅可比行列式}
+
+\begin{definition}[雅可比矩阵]
+设 \(F:\Omega\subseteq\R^n\to\R^m\)，\(F=(F_1,\dots,F_m)\)，各 \(F_i\) 在 \(\mathbf{u}_0\) 处可微。称 \(m\times n\) 矩阵
+\[
+J_F(\mathbf{u}_0)=\left(\frac{\partial F_i}{\partial u_j}(\mathbf{u}_0)\right)_{\substack{1\le i\le m\\ 1\le j\le n}}
+\]
+为 \(F\) 在 \(\mathbf{u}_0\) 处的\emph{雅可比矩阵}（Jacobian matrix）。当 \(m=n\) 时，其行列式
+\[
+\frac{\partial(F_1,\dots,F_n)}{\partial(u_1,\dots,u_n)}=\det J_F(\mathbf{u}_0)
+\]
+称为\emph{雅可比行列式}（Jacobian determinant，也简称 Jacobian）。
+\end{definition}
+
+对坐标变换 \(\Phi(u,v,w)=(x,y,z)\)，雅可比矩阵就是
+\[
+J_\Phi=\frac{\partial(x,y,z)}{\partial(u,v,w)}
+=\begin{pmatrix}
+x_u & x_v & x_w\\[2pt]
+y_u & y_v & y_w\\[2pt]
+z_u & z_v & z_w
+\end{pmatrix},
+\qquad
+\det J_\Phi=\frac{\partial(x,y,z)}{\partial(u,v,w)} .
+\]
+请特别注意：\textbf{\(J_\Phi\) 的三列恰好就是 \(\Phi_u,\Phi_v,\Phi_w\) 三个向量}。这一观察是拉梅系数与雅可比行列式发生联系的唯一原因。
+
+\begin{theorem}[雅可比矩阵的三个基本作用]
+设 \(F\) 在 \(\mathbf{u}_0\) 处可微，\(J=J_F(\mathbf{u}_0)\)。则
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{全微分（一阶近似）}：
+  \[
+  F(\mathbf{u}_0+\Delta\mathbf{u})=F(\mathbf{u}_0)+J\,\Delta\mathbf{u}+o(|\Delta\mathbf{u}|)\qquad(\Delta\mathbf{u}\to\mathbf 0);
+  \]
+  \item \textbf{链式法则（复合）}：若 \(F\) 在 \(\mathbf{u}_0\) 处可微、\(G\) 在 \(F(\mathbf{u}_0)\) 处可微，则
+  \[
+  J_{G\circ F}(\mathbf{u}_0)=J_G\bigl(F(\mathbf{u}_0)\bigr)\,J_F(\mathbf{u}_0);
+  \]
+  \item \textbf{反函数（逆映射）}：若 \(m=n\) 且 \(\det J\ne0\)，则 \(F\) 在 \(\mathbf{u}_0\) 附近有可微的局部逆 \(F^{-1}\)，且
+  \[
+  J_{F^{-1}}\bigl(F(\mathbf{u}_0)\bigr)=J_F(\mathbf{u}_0)^{-1},
+  \qquad\text{从而}\qquad
+  \frac{\partial(u_1,\dots,u_n)}{\partial(x_1,\dots,x_n)}=\left(\frac{\partial(x_1,\dots,x_n)}{\partial(u_1,\dots,u_n)}\right)^{-1}.
+  \]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) 就是可微性的定义逐分量写出。(2) 是对每个分量用一元复合函数求导（链式法则）后按矩阵乘法排列指标。(3) 是反函数定理；对恒等式 \(F^{-1}\circ F=\mathrm{id}\) 用 (2)，得 \(J_{F^{-1}}J_F=I\)，取行列式即得倒数关系。
+\end{proof}
+
+\begin{definition}[函数相关]
+设 \(\Omega\subseteq\R^n\) 是开集，\(F_1,\dots,F_n:\Omega\to\R\)。若存在开集 \(U\subseteq\Omega\) 以及一个\emph{非平凡}的 \(\mathcal C^1\) 函数 \(\Psi(y_1,\dots,y_n)\)（即 \(\Psi\) 在 \(\R^n\) 的某个开集上不恒为常数），使得
+\[
+\Psi\bigl(F_1(\mathbf{u}),\dots,F_n(\mathbf{u})\bigr)\equiv0\qquad(\forall\,\mathbf{u}\in U),
+\]
+则称 \(F_1,\dots,F_n\) 在 \(U\) 上\emph{函数相关}（或称它们之间存在一个函数关系）；否则称它们\emph{（函数）无关}。
+\end{definition}
+
+\begin{remark}[如何理解“函数相关”]
+这个概念有三个容易混淆的地方，先讲清楚：
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{关系必须在一个开集上恒成立。} 若 \(\Psi(F_1,\dots,F_n)=0\) 只在某条曲线或某个点上成立，\emph{不算}函数相关。例如 \(F_1=x,\ F_2=y\) 在 \(\R^2\) 上：虽然 \(F_1^2+F_2^2-1=0\) 在单位圆周上成立，但在任何开集上都不成立，故 \(x,y\) 无关。
+  \item \textbf{“相关”不等于“有一个是另一个的函数”。} 定义只要求存在\emph{某个}关系 \(\Psi(F_1,\dots,F_n)=0\)。例如 \(F_1=x,\ F_2=y,\ F_3=x+y\)（\(n=3\)）满足 \((F_3-F_1-F_2)\equiv0\)，故相关，但反过来 \(x\) 并不是 \(y\) 与 \(x+y\) 的\emph{单值}函数。日常使用中我们常只想把其中一个解出来（“\(F_n=g(F_1,\dots,F_{n-1})\)”），那是更强的要求，需要 \(\partial\Psi/\partial y_n\ne0\) 才能由隐函数定理保证。
+  \item \textbf{“非平凡”不能省。} 取 \(\Psi\equiv0\) 则任何函数组都“满足”关系，所以必须要求 \(\Psi\) 真的依赖于某些 \(y_i\)。
+\end{enumerate}
+\end{remark}
+
+\begin{example}[典型的函数相关与无关]
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{相关}：\(F_1=x,\ F_2=y,\ F_3=xy\)，取 \(\Psi=y_3-y_1y_2\)，则 \(\Psi(F_1,F_2,F_3)=xy-xy\equiv0\)。
+  \item \textbf{相关（关系不必“解得出一个变量”）}：\(F_1=x,\ F_2=x^2\)，取 \(\Psi(y_1,y_2)=y_2-y_1^2\)，则 \(\Psi(F_1,F_2)=x^2-x^2\equiv0\)。
+  \item \textbf{无关}：\(F_1=x,\ F_2=y\)。任何 \(\Psi\) 若在某个开集上 \(\Psi(x,y)\equiv0\)，则由 \(\Psi\) 连续可知它在整个 \(\R^2\) 上为零，与“非平凡”矛盾。
+  \item \textbf{无关（独立，但两者都依赖于同一个变量）}：\(F_1=x+y,\ F_2=x-y\)。它们显然各自都随 \(x,y\) 变化，且 \(\partial(F_1,F_2)/\partial(x,y)=-2\ne0\)；要证明无关，可作变换 \(s=F_1,\ t=F_2\)，即 \(x=\frac{s+t}2,\ y=\frac{s-t}2\)，于是 \(\Psi(F_1,F_2)\equiv0\) 化为 \(\Psi(s,t)\equiv0\) 在 \(\R^2\) 的一个开集上成立，同样只能 \(\Psi\equiv0\) 而平凡。
+  \item \textbf{无关（直观上最反直觉的一例）}：\(F_1=x,\ F_2=x+g(y)\)，其中 \(g\) 是任一 \(\mathcal C^1\) 函数。出现两次 \(x\) 似乎“应该”相关，但 \(F_2-F_1=g(y)\) 说明这个差只依赖于 \(y\)，无法用 \(F_1\) 表示（除非 \(g\) 是常数）；更严格地说，若 \(\Psi(F_1,F_2)\equiv0\)，对 \(y\) 求偏导得 \(\Psi_{y_2}\cdot g'(y)=0\)，在 \(g'\ne0\) 处得 \(\Psi_{y_2}=0\)，进而 \(\Psi\) 只依赖于 \(y_1\)，于是 \(\Psi\equiv\) 常数而平凡。故二者无关。
+\end{enumerate}
+\end{example}
+
+\begin{lemma}[平行体的体积：Gram 行列式]
+设 \(\mathbf{a}_1,\dots,\mathbf{a}_k\in\R^n\)，称
+\[
+P=\Bigl\{\textstyle\sum_{i=1}^{k}t_i\mathbf{a}_i:\ 0\le t_i\le1\Bigr\}
+\]
+为由它们张成的 \(k\) 维\emph{平行体}（\(k=1\) 是线段，\(k=2\) 是平行四边形，\(k=3\) 是平行六面体）。记\emph{Gram 矩阵}
+\[
+G=(\mathbf{a}_i\cdot\mathbf{a}_j)_{k\times k},
+\]
+则 \(P\) 的 \(k\) 维体积为
+\[
+\operatorname{vol}_k(P)=\sqrt{\det G}.
+\]
+\end{lemma}
+
+\begin{proof}
+记 \(A=(\mathbf{a}_1\ \cdots\ \mathbf{a}_k)\) 为 \(n\times k\) 矩阵，则 \(G=A^{\mathsf T}A\)。
+
+\textbf{第一步：\(\mathbf{a}_i\) 两两正交的情形。} 此时 \(G=\operatorname{diag}(\lvert\mathbf{a}_1\rvert^2,\dots,\lvert\mathbf{a}_k\rvert^2)\)，\(\sqrt{\det G}=\prod_i\lvert\mathbf{a}_i\rvert\)。而两两垂直的棱所张成的平行体就是长方体，其体积等于各棱长之积，故结论成立。
+
+\textbf{第二步：一般情形。} 对 \(\mathbf{a}_1,\dots,\mathbf{a}_k\) 作 Gram--Schmidt 正交化：存在正交向量组 \(\mathbf{b}_1,\dots,\mathbf{b}_k\) 与上三角矩阵 \(R=(r_{ij})\)（\(r_{ii}>0\)），使
+\[
+\mathbf{a}_j=\sum_{i\le j}r_{ij}\mathbf{b}_i ,
+\qquad\text{即}\qquad A=B R,\quad B=(\mathbf{b}_1\ \cdots\ \mathbf{b}_k).
+\]
+注意此时 \(G=R^{\mathsf T}\operatorname{diag}(\lvert\mathbf{b}_i\rvert^2)R\) \emph{不能}简单地化成 \(\operatorname{diag}(\lvert\mathbf{b}_i\rvert^2)D^2\)，因为 \(R\) 的非对角元一般不为零。事实上 \(B^{\mathsf T}B=\operatorname{diag}(\lvert\mathbf{b}_i\rvert^2)\)，故
+\[
+G=A^{\mathsf T}A=R^{\mathsf T}B^{\mathsf T}BR=R^{\mathsf T}\operatorname{diag}(\lvert\mathbf{b}_i\rvert^2)R ,
+\]
+且上式右端的 \((i,i)\) 元为 \(\sum_{l}r_{li}^2\lvert\mathbf{b}_l\rvert^2\)，一般并不等于 \(\lvert\mathbf{b}_i\rvert^2r_{ii}^2\)，因此不能简单地“取行列式得 \(\prod r_{ii}^2\lvert\mathbf{b}_i\rvert^2\)”。正确做法是观察平行体的体积：由
+\[
+\mathbf{a}_j=r_{jj}\mathbf{b}_j+\sum_{i<j}r_{ij}\mathbf{b}_i
+\]
+可知，把 \(\mathbf{a}_j\) 沿已有的 \(\mathbf{b}_1,\dots,\mathbf{b}_{j-1}\) 方向作“剪切”，即依次用变换
+\[
+\mathbf{a}_j\ \longmapsto\ \mathbf{a}_j-\sum_{i<j}r_{ij}\mathbf{b}_i=r_{jj}\mathbf{b}_j
+\]
+不改变平行体体积（剪切是行列式为 \(1\) 的线性变换，如 \(\R^2\) 中把平行四边形推成等积矩形）。于是 \(P\) 与由 \(r_{11}\mathbf{b}_1,\dots,r_{kk}\mathbf{b}_k\) 张成的平行体等体积，后者两两正交，由第一步其体积为
+\[
+\prod_{j=1}^k r_{jj}\lvert\mathbf{b}_j\rvert .
+\]
+另一方面，在 \(G=R^{\mathsf T}\operatorname{diag}(\lvert\mathbf{b}_i\rvert^2)R\) 中 \(R\) 为上三角，故
+\[
+\det G=\det(R)^2\prod_{i=1}^k\lvert\mathbf{b}_i\rvert^2
+=\Bigl(\prod_{i=1}^k r_{ii}\Bigr)^{\!2}\prod_{i=1}^k\lvert\mathbf{b}_i\rvert^2
+=\Bigl(\prod_{i=1}^k r_{ii}\lvert\mathbf{b}_i\rvert\Bigr)^{\!2},
+\]
+即 \(\sqrt{\det G}=\prod_j r_{jj}\lvert\mathbf{b}_j\rvert=\operatorname{vol}_k(P)\)，证毕。
+\end{proof}
+
+\begin{lemma}[行列式的几何意义：线性映射的体积伸缩率]
+设 \(A\) 是 \(n\times n\) 实矩阵，\(E\subseteq\R^n\) 可求体积。则
+\[
+\operatorname{vol}_n\bigl(A(E)\bigr)=\left|\det A\right|\cdot\operatorname{vol}_n(E).
+\]
+特别地，\(A\) 把单位正方体 \(Q=[0,1]^n\) 映为以 \(A\) 的各列为棱的平行体，其体积为 \(\left|\det A\right|\)。
+\end{lemma}
+
+\begin{proof}
+取 \(E=Q\)。\(A(Q)\) 是以 \(A\) 的列向量 \(\mathbf{a}_1,\dots,\mathbf{a}_n\) 为棱的平行体，由上一引理其体积为
+\[
+\sqrt{\det(\mathbf{a}_i\cdot\mathbf{a}_j)}=\sqrt{\det(A^{\mathsf T}A)}=\sqrt{\det(A)^2}=\left|\det A\right|.
+\]
+对一般的可求体积集合 \(E\)，用体积的可加性把 \(E\) 用边长为 \(h\) 的小方体拼逼近（Riemann 和），\(\operatorname{vol}(A(Q_h))=\lvert\det A\rvert h^n\) 对每个小方体成立，求和后取极限即得一般结论。
+\end{proof}
+
+\begin{remark}[三个常用特例，帮助建立直觉]
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{恒等映射} \(A=I\)：\(\left|\det A\right|=1\)，体积不变。
+  \item \textbf{伸缩映射} \(A=\operatorname{diag}(\lambda_1,\dots,\lambda_n)\)：\(\left|\det A\right|=\lvert\lambda_1\cdots\lambda_n\rvert\)，即各方向伸缩率的乘积。
+  \item \textbf{剪切映射} \(A=\begin{pmatrix}1&\lambda\\0&1\end{pmatrix}\)：\(\det A=1\)，体积\emph{不变}。这在几何上很直观——单位正方形被推成等面积的平行四边形，形状变了，面积没变。这提示我们：\textbf{行列式只记录体积（面积）的伸缩，不记录形状的变化。}
+\end{enumerate}
+再举一个“退化”的特例：\(F(x,y)=(x,0)\) 把整个平面压到 \(x\) 轴上，\(J_F=\begin{pmatrix}1&0\\0&0\end{pmatrix}\)，\(\det J_F=0\)，像集的二维体积为零。这说明 \(\det J=0\) 意味着映射在该点把体积压缩到更低维，因而必然\emph{不能局部可逆}。
+\end{remark}
+
+\begin{theorem}[雅可比行列式的几何意义：局部体积伸缩率]\label{thm:jacobian-volume}
+设 \(\Phi:\Omega\to\R^n\) 连续可微，\(\mathbf{u}_0\in\Omega\)。则
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{（线性化）} 在 \(\mathbf{u}_0\) 附近，\(\Phi\) 与它的线性化 \(L(\mathbf{u})=\Phi(\mathbf{u}_0)+J_\Phi(\mathbf{u}_0)(\mathbf{u}-\mathbf{u}_0)\) 相差 \(o(\lvert\mathbf{u}-\mathbf{u}_0\rvert)\)；
+  \item \textbf{（体积伸缩率）} 若 \(\det J_\Phi(\mathbf{u}_0)\ne0\)，则 \(\mathbf{u}_0\) 处边长 \(\mathrm{d}u_1,\dots,\mathrm{d}u_n\) 的无穷小长方体，在 \(\Phi\) 下的像是一个无穷小平行体，其 \(n\) 维体积为
+  \[
+  \mathrm{d}V=\left|\det J_\Phi(\mathbf{u}_0)\right|\,\mathrm{d}u_1\mathrm{d}u_2\cdots \mathrm{d}u_n ,
+  \]
+  即 \(\left|\det J_\Phi\right|\) 是体积元（面元、体元）的\emph{局部伸缩率}。
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) 是微分的定义：\(\Phi(\mathbf{u}_0+\Delta\mathbf{u})-\Phi(\mathbf{u}_0)=J_\Phi(\mathbf{u}_0)\Delta\mathbf{u}+\mathbf{r}(\Delta\mathbf{u})\)，其中 \(\lvert\mathbf{r}(\Delta\mathbf{u})\rvert/\lvert\Delta\mathbf{u}\rvert\to0\)。
+
+(2) 分两步，先处理\emph{线性}映射再过渡到一般情形。
+
+\textbf{第一步：线性映射。} 设 \(\Phi\) 是线性的，\(\Phi(\mathbf{u})=A\mathbf{u}\)（\(A\) 为常数矩阵），则 \(J_\Phi\equiv A\)。取 \(\mathbf{u}_0=\mathbf 0\)，坐标长方体 \(Q=[0,\mathrm{d}u_1]\times\cdots\times[0,\mathrm{d}u_n]\) 的像是
+\[
+A Q=\Bigl\{\textstyle\sum_i t_i(\mathrm{d}u_i\mathbf{a}_i):\ 0\le t_i\le1\Bigr\},
+\qquad \mathbf{a}_i=A\mathbf{e}_i\ (\text{\(A\) 的第 \(i\) 列}),
+\]
+即以 \(\mathrm{d}u_1\mathbf{a}_1,\dots,\mathrm{d}u_n\mathbf{a}_n\) 为棱的平行体。由“平行体的体积”引理，
+\[
+\operatorname{vol}\bigl(AQ\bigr)=\sqrt{\det\bigl((\mathrm{d}u_i\mathbf{a}_i)\cdot(\mathrm{d}u_j\mathbf{a}_j)\bigr)}
+=\sqrt{\det\Bigl(\operatorname{diag}(\mathrm{d}u_i)\,A^{\mathsf T}A\,\operatorname{diag}(\mathrm{d}u_j)\Bigr)}
+=\lvert\det A\rvert\prod_{i=1}^n\mathrm{d}u_i ,
+\]
+最后一步用了 \(\det(A^{\mathsf T}A)=\det(A)^2\)。再由“线性映射的体积伸缩率”引理，\(\operatorname{vol}(AQ)=\lvert\det A\rvert\operatorname{vol}(Q)\)，两式一致。
+
+\textbf{第二步：非线性映射。} 关键在于\textbf{不要用“线性化代替原映射”来算体积，而要用精确的体积元公式}。由
+\[
+\mathrm{d}\Phi=\sum_{i=1}^n\Phi_{u_i}\,\mathrm{d}u_i
+\]
+知，\(\mathrm{d}u_i\) 张成的小长方体被映成由向量 \(\Phi_{u_1}\mathrm{d}u_1,\dots,\Phi_{u_n}\mathrm{d}u_n\) 张成的\emph{弯曲}平行体。再一次用“平行体的体积”引理，其体积为
+\[
+\mathrm{d}V=\sqrt{\det\bigl((\Phi_{u_i}\cdot\Phi_{u_j})\,\mathrm{d}u_i\,\mathrm{d}u_j\bigr)}
+=\sqrt{\det\bigl(J^{\mathsf T}J\bigr)}\prod_{i=1}^n\mathrm{d}u_i
+=\left|\det J\right|\prod_{i=1}^n\mathrm{d}u_i ,
+\]
+其中 \(J=J_\Phi(\mathbf{u}_0)\)，并再次用了 \(\det(J^{\mathsf T}J)=\det(J)^2\)。这一计算是\emph{精确}的，没有丢弃任何项。
+
+至于“为什么可以略去非线性部分”，其严格理由如下：设长方体边长同为 \(h\)，中心在 \(\mathbf{u}_0\)，则 \(\Phi\) 与 \(L\) 在该长方体上的偏差不超过 \(o(h)\)，故 \(\Phi(Q_h)\) 与 \(L(Q_h)\) 的对称差体积不超过 \(C\,o(h)\cdot h^{n-1}=o(h^n)\)，而 \(\operatorname{vol}(L(Q_h))=\lvert\det J\rvert h^n=\Theta(h^n)\)，于是
+\[
+\frac{\operatorname{vol}\bigl(\Phi(Q_h)\bigr)}{\operatorname{vol}(Q_h)}
+=\lvert\det J\rvert+o(1)\ \xrightarrow[h\to0]{}\ \lvert\det J\rvert .
+\]
+即伸缩率是体积之比的极限；与上面精确的 \(\mathrm{d}V\) 表达式一致。
+\end{proof}
+
+\begin{remark}[定理 \ref{thm:jacobian-volume} 的推广：\(n\) 维体积一般公式]
+把证明第二步中的 \(J\) 换成一般 \(m\times n\) 矩阵（即允许 \(\Phi:\Omega\subseteq\R^n\to\R^m\)，\(m\ge n\)），上述推导\emph{一字不改}地给出：\(\Phi\) 把 \(\mathbf{u}_0\) 处的 \(n\) 维体积元映成的像的 \(n\) 维体积为
+\[
+\mathrm{d}V=\sqrt{\det\bigl(J^{\mathsf T}J\bigr)}\;\mathrm{d}u_1\cdots\mathrm{d}u_n ,
+\]
+而 \(\sqrt{\det(J^{\mathsf T}J)}\) 正是 \(J\) 的 \(n\) 个列向量张成的平行体的体积（平行体引理）。当 \(m=n\) 时 \(\sqrt{\det(J^{\mathsf T}J)}=\lvert\det J\rvert\)，回到定理 \ref{thm:jacobian-volume}。特别地，曲面 \(\Phi(u,v)\)（\(m=3,n=2\)）的面积元为
+\[
+\mathrm{d}S=\sqrt{EG-F^2}\,\mathrm{d}u\,\mathrm{d}v,\qquad
+E=\lvert\Phi_u\rvert^2,\quad F=\Phi_u\cdot\Phi_v,\quad G=\lvert\Phi_v\rvert^2 ,
+\]
+这就是曲面论中的\emph{第一基本形式}；而 \(\sqrt{EG-F^2}=\lvert\Phi_u\times\Phi_v\rvert\)（拉格朗日恒等式），与直接用叉积的写法一致。
+\end{remark}
+
+\begin{example}[用极坐标检验定理 \ref{thm:jacobian-volume}]
+取 \(\Phi(r,\theta)=(r\cos\theta,r\sin\theta)\)，则 \(\det J_\Phi=r\)。
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{精确计算。} 参数区域内边长 \(\mathrm{d}r,\mathrm{d}\theta\) 的小矩形被映成环扇形，其\emph{精确}面积为
+  \[
+  \frac12(r+\mathrm{d}r)^2\mathrm{d}\theta-\frac12r^2\mathrm{d}\theta
+  =\underbrace{r\,\mathrm{d}r\,\mathrm{d}\theta}_{\lvert\det J\rvert\,\mathrm{d}r\,\mathrm{d}\theta}
+  +\underbrace{\tfrac12(\mathrm{d}r)^2\mathrm{d}\theta}_{\text{高阶项}} .
+  \]
+  主项正是 \(\lvert\det J\rvert\,\mathrm{d}r\,\mathrm{d}\theta\)，而多出的 \(\frac12(\mathrm{d}r)^2\mathrm{d}\theta\) 与主项之比为 \(\frac{\mathrm{d}r}{2r}\to0\)。这就把“\(o\) 阶可略”落实成了一个可以亲眼验证的式子。
+  \item \textbf{用它算面积}：\(\Phi\) 把参数矩形 \([0,1]\times[0,2\pi]\) 映成单位圆盘，把 \([0,R]\times[0,2\pi]\) 映成半径 \(R\) 的圆盘，于是
+  \[
+  \iint_{\text{单位圆}}1\,\mathrm{d}x\,\mathrm{d}y=\int_0^{2\pi}\!\!\int_0^1 r\,\mathrm{d}r\,\mathrm{d}\theta=\pi,
+  \qquad
+  \iint_{\text{半径 }R\text{ 的圆}}1\,\mathrm{d}x\,\mathrm{d}y=\int_0^{2\pi}\!\!\int_0^R r\,\mathrm{d}r\,\mathrm{d}\theta=\pi R^2 ,
+  \]
+  面积之比为 \(R^2\)，与几何事实吻合。
+  \item \textbf{\(\det J=r=0\) 的含义}：在 \(r=0\)（原点）处伸缩率为零。几何上 \(r=0\) 时整个 \(\theta\) 方向的分量 \(\Phi_\theta=(-r\sin\theta,r\cos\theta)=\mathbf 0\) 退化成零向量，所有 \(\theta\) 对应同一个点。这正说明 \(\det J=0\) 处映射把二维体积压成零，不能局部可逆（事实上极坐标在原点不是单射）。
+\end{enumerate}
+\end{example}
+
+\begin{theorem}[雅可比行列式为零的判别]\label{thm:jacobian-dependence}
+设 \(F=(F_1,\dots,F_n):\Omega\subseteq\R^n\to\R^n\) 在开集 \(\Omega\) 上连续可微。则
+\begin{enumerate}[label=(\arabic*)]
+  \item 若 \(F_1,\dots,F_n\) 在某个开集 \(U\subseteq\Omega\) 上函数相关，则 \(J_F\) 的各行在 \(U\) 上线性相关，从而
+  \[
+  \det J_F\equiv0\qquad(\text{在 }U\text{ 上});
+  \]
+  \item \textbf{（逆否形式，最常用）} 若 \(\det J_F(\mathbf{u})\ne0\)（\(\forall\,\mathbf{u}\in\Omega\)），则 \(F_1,\dots,F_n\) 在 \(\Omega\) 的\emph{任一}开子集上都不相关，即它们在 \(\Omega\) 上函数无关。
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) 设存在开集 \(U\subseteq\Omega\) 与 \(\mathcal C^1\) 函数 \(\Psi(y_1,\dots,y_n)\)，使
+\[
+\Psi\bigl(F_1(\mathbf{u}),\dots,F_n(\mathbf{u})\bigr)\equiv0\qquad(\forall\,\mathbf{u}\in U).
+\]
+\textbf{关键恒等式：}对两边关于 \(u_j\) 求偏导（\(j=1,\dots,n\)），由链式法则
+\[
+0=\frac{\partial}{\partial u_j}\Psi\bigl(F(\mathbf{u})\bigr)
+=\sum_{i=1}^n \frac{\partial\Psi}{\partial y_i}\bigl(F(\mathbf{u})\bigr)\cdot\frac{\partial F_i}{\partial u_j}(\mathbf{u}).
+\]
+记 \(\lambda_i=\dfrac{\partial\Psi}{\partial y_i}\bigl(F(\mathbf{u})\bigr)\)。当 \(\mathbf{u}\) 固定时，\(\lambda_1,\dots,\lambda_n\) 都是\emph{数}，且上面的式子恰好是说：用这些数作系数线性组合 \(J_F\) 的各行，得到零向量——
+\[
+\sum_{i=1}^n\lambda_i\,\nabla F_i(\mathbf{u})
+=\bigl(\lambda_1,\dots,\lambda_n\bigr)J_F(\mathbf{u})=\mathbf 0^{\mathsf T}.
+\]
+这里用到“\(J_F\) 的第 \(i\) 行就是 \(\nabla F_i\)”这一基本事实。于是 \(J_F(\mathbf{u})\) 的行向量组线性相关，故 \(\det J_F(\mathbf{u})=0\)。由于 \(\mathbf{u}\in U\) 任意，得 \(\det J_F\equiv0\) 于 \(U\)。
+
+\textbf{还需要说明系数不全为零：}若 \(\lambda_1=\cdots=\lambda_n=0\)，即 \(\nabla\Psi(F(\mathbf{u}))=\mathbf 0\)，则上式给不出信息。此时矛盾出现在别处：由 \(\Psi(F(\mathbf{u}))\equiv0\) 于开集 \(U\) 知 \(F(U)\) 是 \(\R^n\) 中的集合，\(\Psi\) 在 \(F(U)\) 上为零；若 \(F(U)\) 有内点则由 \(\Psi\) 在该内点附近恒为零而只能 \(\Psi\equiv0\)（平凡）。因此在使用本判别时，通常直接假定所论关系是\emph{非平凡}的（即在某点处 \(\nabla\Psi\ne\mathbf 0\)），此时 \(\lambda\) 不全为零，行向量组确实线性相关。
+
+(2) 是 (1) 的逆否命题：若在某个开子集上相关，则在该子集上 \(\det J_F\equiv0\)，与 \(\det J_F\ne0\) 矛盾。
+\end{proof}
+
+\begin{remark}[怎样理解“行向量线性相关”]
+定理 \ref{thm:jacobian-dependence} 的内涵是一条纯粹的线性代数命题。已知 \(J_F\) 的第 \(i\) 行是梯度 \(\nabla F_i=\bigl(\partial_{u_1}F_i,\dots,\partial_{u_n}F_i\bigr)\)，而
+\[
+\det J_F=0
+\iff J_F\text{ 的行向量组线性相关}
+\iff \exists\,\lambda_1,\dots,\lambda_n\ \text{不全为零},\ \sum_{i=1}^n\lambda_i\nabla F_i=\mathbf 0 .
+\]
+也就是说：\textbf{有一个非零的、各分量固定的方向 \((\lambda_1,\dots,\lambda_n)\)，使得 \(n\) 个梯度在该方向上“相互抵消”。}这正是“这些函数彼此不独立”在微分层面的表现——只要一个函数偏离一点点，立刻会被其他函数的变化以固定比例抵消掉，从而无法用一个 \(n\) 元函数约束它们。反之，若 \(\det J_F\ne0\)，则 \(n\) 个梯度在每个点都线性无关，不可能存在这样一个固定方向。
+
+要特别注意“\(\lambda_i\) 不依赖于 \(\mathbf u\) 中的位置”这一点在证明中是如何出现的：因为 \(\Psi\) 是\emph{一个固定的}函数，所以复合 \(\lambda_i=\partial_{y_i}\Psi(F(\mathbf u))\) 虽然随 \(\mathbf u\) 变化，但它们是由同一个 \(\Psi\) 决定的。而在每一点处，行向量组的相关性只需“存在某组不全为零的系数”，因此系数逐点不同并不妨碍结论——这解释了为什么定理的证明虽然“只对每个点”做了一次线性代数，结论却是整体的。
+\end{remark}
+
+\begin{remark}[“\(F_n=g(F_1,\dots,F_{n-1})\)”与“函数相关”的区别]
+日常使用中我们往往想要更强的结论：“其中一个函数可以用其余函数表示”，即存在 \(\mathcal C^1\) 的 \(g\) 使
+\[
+F_n=g(F_1,\dots,F_{n-1}).
+\]
+由隐函数定理，这等价于存在关系 \(\Psi(F_1,\dots,F_n)\equiv0\) 且 \(\dfrac{\partial\Psi}{\partial y_n}\ne0\)（\(\ne0\) 才能把 \(y_n\) 解出来）。而定理 \ref{thm:jacobian-dependence} 只保证“存在\emph{某个}非平凡关系 \(\Psi\)”，不保证能解出某个变量。二者在大多数场合一致，但在临界点附近会分开——因为 \(\partial\Psi/\partial y_n\) 可能为零。例如 \(F(u,v)=(u^2,u^3)\) 满足 \(\Psi(u^2,u^3)\equiv0\)（取 \(\Psi=y_1^3-y_2^2\)），但取 \(\partial\Psi/\partial y_2=-2y_2\) 在 \(u=0\) 处为零，正对应半立方抛物线在原点有尖点：\(F_2\) 无法写成 \(F_1\) 的 \(\mathcal C^1\) 函数。
+\end{remark}
+
+\begin{remark}[为什么反过来不成立，以及正确的判别工具]
+定理 \ref{thm:jacobian-dependence} 是单向的：\textbf{“相关 \(\Rightarrow\det J_F\equiv0\)”成立，但反过来不成立}，即使 \(F\) 光滑也不行。用一个例子把这个“空隙”看清楚。
+
+取
+\[
+F(u,v)=(u^2,\,v^2),\qquad
+J_F=\begin{pmatrix}2u & 0\\ 0 & 2v\end{pmatrix},\qquad
+\det J_F=4uv .
+\]
+在两条坐标轴上 \(\det J_F=0\)，但 \(\det J_F\) 并\emph{不}恒为零，故定理 \ref{thm:jacobian-dependence} 的前提不满足。可以验证 \(F_1=u^2\) 与 \(F_2=v^2\) 确实函数\emph{无关}：若 \(\Psi(u^2,v^2)\equiv0\) 于某个开集 \(U\)，则对 \(U\) 中一切 \((u,v)\) 有 \(\Psi(u^2,v^2)=0\)。任取一点 \((u_0,v_0)\in U\) 且 \(u_0v_0\ne0\)，由 \(\Psi\) 连续，\(\Psi\) 在该点附近的一个\emph{开}矩形上恒为零；而一个在开集上恒为零的连续函数在整个 \(\R^2\) 上恒为零，故 \(\Psi\equiv0\)，即 \(\Psi\) 平凡。所以不存在非平凡的关系，二者无关。
+
+\textbf{误用在哪里？} 常见错误是把“\(\det J_F\) 在某个低维集（这里是坐标轴）上为零”读成“\(\det J_F\equiv0\)”。定理 \ref{thm:jacobian-dependence} 要求的是在\emph{整个开集}上恒为零。只在一个零测集上为零完全不影响结论——这也正是重积分换元公式里允许 \(\det J\) 几乎处处非零的原因。
+
+\textbf{从秩看同一件事：}在 \(uv\ne0\) 处 \(\rank J_F=2=n\)，由秩定理（见下）\(F\) 局部\emph{单射}——这也可以直接看出来：限制在象限 \(\{u>0,v>0\}\) 上它有逆 \((x,y)\mapsto(\sqrt x,\sqrt y)\)。而在原点处 \(\rank J_F=0\)，那里恰恰是 \(F\) 失去局部单射性的地方（\((u,v)\) 与 \((-u,-v)\) 映到同一点）。\textbf{秩的这种跳动，正是“定理 \ref{thm:jacobian-dependence} 不能反推”的根源。}
+\end{remark}
+
+\begin{theorem}[秩定理/常秩定理：定理 \ref{thm:jacobian-dependence} 的精确版本]\label{thm:rank}
+设 \(F:\Omega\subseteq\R^n\to\R^n\) 是 \(\mathcal C^k\) 映射（\(k\ge1\)），\(\mathbf u_0\in\Omega\)，且 \(J_F\) 在 \(\mathbf u_0\) 的某个邻域内\emph{秩恒为} \(r\)（\(0\le r\le n\)）。则
+\begin{enumerate}[label=(\arabic*)]
+  \item 在 \(\mathbf u_0\) 附近恰有 \(n-r\) 个函数无关的关系约束 \(F_1,\dots,F_n\)；等价的几何陈述是：像集 \(F(\Omega)\) 在 \(F(\mathbf u_0)\) 附近是一张 \(r\) 维 \(\mathcal C^k\) 曲面；
+  \item 若 \(r=n\)，则 \(F\) 在 \(\mathbf u_0\) 的某邻域内既函数无关、又局部可逆（与定理 \ref{thm:jacobian-dependence} 及反函数定理一致）；
+  \item 若 \(r=0\)，则 \(J_F\) 在 \(\mathbf u_0\) 的一个\emph{连通}邻域内恒为零，于是 \(F\) 在该邻域内恒为常数，一阶信息完全消失，\(\det J_F\) 型的判别失效。
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}[证明思路]
+(1) 即常秩定理：\(\rank J_F\equiv r\) 时，存在 \(\mathbf u_0\) 附近的局部坐标与 \(F(\mathbf u_0)\) 附近的局部坐标，使 \(F\) 化为\emph{投影}
+\[
+(x_1,\dots,x_n)\ \longmapsto\ (x_1,\dots,x_r,\,0,\dots,0).
+\]
+此时后 \(n-r\) 个分量在新坐标下恒为零，恰好给出 \(n-r\) 个关系；前 \(r\) 个分量自由取值，故像集是 \(r\) 维曲面。(2) 由 \(\det J_F\ne0\) 加上 \(\det J_F\) 连续即得。(3) 中 \(J_F\equiv\mathbf 0\) 于连通邻域意味着各 \(F_i\) 的偏导全为零，故 \(F\) 为常数——这里用到了邻域的\emph{连通性}（否则各连通分支上的常数可以不同）。(1) 的完整证明属高等微积分范围，此处只陈述结论与几何含义。
+\end{proof}
+
+\begin{remark}[秩定理如何补上定理 \ref{thm:jacobian-dependence} 的空隙]
+把两者对照，可以一句话说清分工：
+\begin{center}
+\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{ll}
+\hline
+命题 & 它能告诉你什么\\
+\hline
+定理 \ref{thm:jacobian-dependence} & 相关 \(\Rightarrow\det J_F\equiv0\)（即“若秩为 \(n\)，则无关”）\\
+秩定理 & 秩恒为 \(r\) \(\Rightarrow\) 恰有 \(n-r\) 个独立关系，像集为 \(r\) 维曲面\\
+\hline
+\end{tabular}
+\end{center}
+于是：\(\det J_F\equiv0\) 只说明“秩 \(<n\)，即至少有一个关系”，\emph{有几个}关系必须去数秩。这就是为什么在微分方程、隐函数与约束系统的讨论中，真正出场的是 \(\rank J_F\) 而不是 \(\det J_F\)。下面用两个例子验证：
+\begin{enumerate}[label=(\arabic*)]
+  \item \(F(u,v)=(u,0)\)：\(J_F=\begin{pmatrix}1&0\\0&0\end{pmatrix}\)，秩恒为 \(1\)。由秩定理应有 \(2-1=1\) 个关系；确实 \(F_2\equiv0\) 本身就是关系（\(\Psi(y_1,y_2)=y_2\)）。这里“\(\det J_F\equiv0\) 且确实相关”同时成立，说明定理 \ref{thm:jacobian-dependence} 的方向是可靠的。
+  \item \(F(u,v)=(u^2,v^2)\)：由上面的讨论，\(F_1,F_2\) \emph{无关}；其原因是秩在 \(uv\ne0\) 处等于 \(2=n\)（由 (2) 得局部无关），而在原点跳变为 \(0\)——\textbf{秩不恒定}，故秩定理的前提在原点的任何邻域内都不成立，反推失效。
+\end{enumerate}
+\end{remark}
+
+\begin{example}[极坐标：\(\det J=r\) 与函数无关性]
+取 \(\Phi(r,\theta)=(r\cos\theta,r\sin\theta)\)，\(\det J_\Phi=r\)。
+\begin{enumerate}[label=(\arabic*)]
+  \item 在开集 \(\Omega=\{r>0\}\) 上 \(\det J_\Phi=r\ne0\)，故由定理 \ref{thm:jacobian-dependence}，\(x=r\cos\theta\) 与 \(y=r\sin\theta\) 在 \(\Omega\) 上函数无关。事实上这个变换在 \(\Omega\) 上可逆，逆为 \(r=\sqrt{x^2+y^2},\ \theta=\arctan(y/x)\)（局部），确实有 \(\theta=y_2\) 型的显式表达。
+  \item 在\emph{整个} \(\R^2\)（含 \(r=0\)）上，\(\det J_\Phi=r\) 在 \(r=0\) 处为零，定理 \ref{thm:jacobian-dependence} 的假设不成立。这与事实相符：在原点 \(x=y=0\)，\(r,\theta\) 的函数无关性失去意义（\(\theta\) 无定义），且 \(\Phi\) 在原点不局部可逆。
+  \item \textbf{常见误用}：\(\det J_\Phi\) 在\emph{一条线}（\(r=0\)）上为零，并不构成“\(\det J_F\equiv0\)”。定理 \ref{thm:jacobian-dependence} 要求的是在整个开集上恒为零，只在一个低维集（临界集）上为零完全不影响结论。这一点在积分换元时也正是允许的：只需 \(\det J\ne0\) 于几乎处处（critical set 为零测集）。
+\end{enumerate}
+\end{example}
+
+\begin{remark}[局部可逆 \(\ne\) 全局单射，以及换元公式为何不要求单射]
+定理 \ref{thm:jacobian-dependence} 与反函数定理给出的都是\emph{局部}结论。\(\det J_F\ne0\) 于整个 \(\Omega\) 并不蕴含 \(F\) 在 \(\Omega\) 上单射。反例：
+\[
+F(u,v)=\bigl(e^{u}\cos v,\ e^{u}\sin v\bigr),\qquad
+J_F=\begin{pmatrix}e^u\cos v & -e^u\sin v\\ e^u\sin v & e^u\cos v\end{pmatrix},
+\qquad
+\det J_F=e^{2u}>0 ,
+\]
+但 \(F\) 关于 \(v\) 以 \(2\pi\) 为周期，故 \(F(u,v)=F(u,v+2\pi)\)，在 \(\R^2\) 上不是单射（它是“覆盖映射”，整体上是无穷多层的）。然而\emph{限制在} \(\{0<v<2\pi\}\) 上它是单射。
+
+这解释了重积分换元公式中一个看似技术性的条件：公式只要求 \(\Phi\) 在\emph{除去零测集}外是单射（或直接要求“几乎处处单射”），而不要求全局单射。因为 \(\det J=0\) 的临界集及其像都是零测集，在积分中不起作用。若把“\(\det J\ne0\) \(\Rightarrow\) 单射”误当作整体结论，就会对这类公式的必要性感到困惑。
+\end{remark}
+
+\subsubsection{两者的关系}
+
+\begin{theorem}[正交曲线坐标下 \(\left|\det J_\Phi\right|=h_uh_vh_w\)]
+设 \(\Phi\) 给出正交曲线坐标 \((u,v,w)\)。则
+\[
+\left|\frac{\partial(x,y,z)}{\partial(u,v,w)}\right|=h_u h_v h_w ,
+\]
+并且 \(\det J_\Phi=h_uh_vh_w\) 当且仅当标架 \((\mathbf e_u,\mathbf e_v,\mathbf e_w)=\left(\frac{\Phi_u}{h_u},\frac{\Phi_v}{h_v},\frac{\Phi_w}{h_w}\right)\) 是右手的。
+\end{theorem}
+
+\begin{proof}
+记 \(A=J_\Phi\)，其列向量为 \(\mathbf{a}_1=\Phi_u\)，\(\mathbf{a}_2=\Phi_v\)，\(\mathbf{a}_3=\Phi_w\)。由正交性，向量组两两内积 \(\mathbf{a}_i\cdot\mathbf{a}_j=0\)（\(i\ne j\)），故
+\[
+A^{\mathsf T}A=
+\begin{pmatrix}
+\mathbf{a}_1\cdot\mathbf{a}_1 & 0 & 0\\
+0 & \mathbf{a}_2\cdot\mathbf{a}_2 & 0\\
+0 & 0 & \mathbf{a}_3\cdot\mathbf{a}_3
+\end{pmatrix}
+=\operatorname{diag}\bigl(h_u^2,\,h_v^2,\,h_w^2\bigr).
+\]
+两边取行列式，并用 \(\det(A^{\mathsf T}A)=\det(A)^2\)，得
+\[
+\det(A)^2=h_u^2h_v^2h_w^2
+\quad\Longrightarrow\quad
+\left|\det A\right|=h_uh_vh_w .
+\]
+再由 \(A^{\mathsf T}A\) 正定知 \(\det A\ne0\)，而
+\[
+\det A=h_uh_vh_w\det(\mathbf e_u,\mathbf e_v,\mathbf e_w),
+\]
+故 \(\det A=h_uh_vh_w\) 当且仅当混合积 \(\det(\mathbf e_u,\mathbf e_v,\mathbf e_w)=+1\)，即标架右手。
+\end{proof}
+
+\begin{remark}
+上述证明并未用到维数 \(3\)。对任意 \(n\) 元正交曲线坐标，同样成立 \(\left|\det J_\Phi\right|=h_1h_2\cdots h_n\)。
+\end{remark}
+
+\begin{theorem}[体积元、面积元、弧长元]
+在正交曲线坐标 \((u,v,w)\) 下，记 \(h_u,h_v,h_w\) 为拉梅系数，则
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{弧长元}：\(\displaystyle \mathrm{d}s^2=h_u^2\,\mathrm{d}u^2+h_v^2\,\mathrm{d}v^2+h_w^2\,\mathrm{d}w^2\)；
+  \item \textbf{体积元}：\(\displaystyle \mathrm{d}V=h_uh_vh_w\,\mathrm{d}u\,\mathrm{d}v\,\mathrm{d}w\)；
+  \item \textbf{坐标曲面上的面积元}：\(w=\) 常数 的曲面上
+  \[
+  \mathrm{d}S_w=h_uh_v\,\mathrm{d}u\,\mathrm{d}v ,
+  \]
+  类似地 \(\mathrm{d}S_u=h_vh_w\,\mathrm{d}v\,\mathrm{d}w\)，\(\mathrm{d}S_v=h_wh_u\,\mathrm{d}w\,\mathrm{d}u\)。
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) 由 \(\mathrm{d}\Phi=\Phi_u\mathrm{d}u+\Phi_v\mathrm{d}v+\Phi_w\mathrm{d}w\) 及三向量两两正交，
+\[
+\mathrm{d}s^2=\mathrm{d}\Phi\cdot\mathrm{d}\Phi=h_u^2\mathrm{d}u^2+h_v^2\mathrm{d}v^2+h_w^2\mathrm{d}w^2 .
+\]
+(2) 是上一定理与“雅可比行列式的几何意义”的直接推论。(3) 在 \(w=\) 常数的曲面上取参数 \((u,v)\)，面积元为 \(\left|\Phi_u\times\Phi_v\right|\mathrm{d}u\,\mathrm{d}v\)；由正交性 \(\left|\Phi_u\times\Phi_v\right|=h_uh_v\)（因为 \(\sin\angle(\Phi_u,\Phi_v)=1\)），故得结论。
+\end{proof}
+
+\begin{remark}[与度规张量的关系]
+称 \(g_{ij}=\Phi_{u_i}\cdot\Phi_{u_j}\) 为曲线坐标的\emph{度规张量}（第一基本形式）。于是
+\[
+h_i=\sqrt{g_{ii}},\qquad
+\det(g_{ij})=\det(J^{\mathsf T}J)=\det(J)^2 ,
+\]
+而“正交”恰是 \(g_{ij}=0\)（\(i\ne j\)），此时 \(g=\operatorname{diag}(h_1^2,\dots,h_n^2)\)。所以拉梅系数是度规张量的对角元之平方根，\(\sqrt{\det g}=\left|\det J\right|\)；在正交情形下它等于各拉梅系数之积。这说明\emph{拉梅系数是内蕴度量量，与坐标变换的选取无关，而雅可比行列式依赖于参数化的选取}——两者只是在正交参数化下数值上一致。
+\end{remark}
+
+\begin{example}[平面极坐标]
+\[
+x=r\cos\theta,\qquad y=r\sin\theta\qquad(r>0).
+\]
+位置向量 \(\Phi(r,\theta)=(r\cos\theta,\,r\sin\theta)\)，于是
+\[
+\Phi_r=(\cos\theta,\sin\theta),\qquad \Phi_\theta=(-r\sin\theta,\,r\cos\theta),
+\]
+\[
+h_r=\left|\Phi_r\right|=1,\qquad h_\theta=\left|\Phi_\theta\right|=r,
+\qquad \Phi_r\cdot\Phi_\theta=-r\sin\theta\cos\theta+r\sin\theta\cos\theta=0 .
+\]
+故极坐标是正交曲线坐标，且
+\[
+\left|\frac{\partial(x,y)}{\partial(r,\theta)}\right|=h_rh_\theta=r .
+\]
+这与直接计算 \(\det\begin{pmatrix}\cos\theta & -r\sin\theta\\ \sin\theta & r\cos\theta\end{pmatrix}=r(\cos^2\theta+\sin^2\theta)=r\) 一致。于是
+\[
+\mathrm{d}s^2=\mathrm{d}r^2+r^2\mathrm{d}\theta^2,\qquad
+\iint_D f\,\mathrm{d}x\,\mathrm{d}y=\iint_{D'} f\,r\,\mathrm{d}r\,\mathrm{d}\theta .
+\]
+那个“多出来的 \(r\)”就是 \(h_\theta\)：在极坐标里，角度的单位变化对应的真实弧长随半径线性增长。
+\end{example}
+
+\begin{example}[柱坐标]
+\[
+x=r\cos\theta,\qquad y=r\sin\theta,\qquad z=z\qquad(r>0).
+\]
+三个偏导向量为 \((\cos\theta,\sin\theta,0)\)、\((-r\sin\theta,r\cos\theta,0)\)、\((0,0,1)\)，两两正交，故
+\[
+h_r=1,\qquad h_\theta=r,\qquad h_z=1,
+\qquad
+\left|\frac{\partial(x,y,z)}{\partial(r,\theta,z)}\right|=r .
+\]
+于是 \(\mathrm{d}V=r\,\mathrm{d}r\,\mathrm{d}\theta\,\mathrm{d}z\)，\(\mathrm{d}s^2=\mathrm{d}r^2+r^2\mathrm{d}\theta^2+\mathrm{d}z^2\)。
+\end{example}
+
+\begin{example}[球坐标]
+采用物理惯例 \((\rho,\varphi,\theta)\)，其中 \(\rho\) 为到原点的距离，\(\varphi\) 为极角（与 \(z\) 轴夹角），\(\theta\) 为方位角：
+\[
+x=\rho\sin\varphi\cos\theta,\qquad
+y=\rho\sin\varphi\sin\theta,\qquad
+z=\rho\cos\varphi\qquad(\rho>0,\ 0<\varphi<\pi).
+\]
+依次求偏导：
+\[
+\Phi_\rho=(\sin\varphi\cos\theta,\ \sin\varphi\sin\theta,\ \cos\varphi),
+\]
+\[
+\Phi_\varphi=(\rho\cos\varphi\cos\theta,\ \rho\cos\varphi\sin\theta,\ -\rho\sin\varphi),
+\]
+\[
+\Phi_\theta=(-\rho\sin\varphi\sin\theta,\ \rho\sin\varphi\cos\theta,\ 0).
+\]
+先算模长：
+\[
+h_\rho=1,\qquad
+h_\varphi^2=\rho^2\cos^2\varphi+\rho^2\sin^2\varphi=\rho^2\ \Rightarrow\ h_\varphi=\rho,
+\]
+\[
+h_\theta^2=\rho^2\sin^2\varphi(\sin^2\theta+\cos^2\theta)=\rho^2\sin^2\varphi\ \Rightarrow\ h_\theta=\rho\sin\varphi .
+\]
+再验证正交性：
+\[
+\Phi_\rho\cdot\Phi_\varphi=\rho\sin\varphi\cos\varphi\cos^2\theta+\rho\sin\varphi\cos\varphi\sin^2\theta-\rho\sin\varphi\cos\varphi=0,
+\]
+\[
+\Phi_\varphi\cdot\Phi_\theta=-\rho^2\sin\varphi\cos\varphi\sin\theta\cos\theta+\rho^2\sin\varphi\cos\varphi\sin\theta\cos\theta=0,
+\]
+\[
+\Phi_\rho\cdot\Phi_\theta=-\rho\sin^2\varphi\sin\theta\cos\theta+\rho\sin^2\varphi\sin\theta\cos\theta=0 .
+\]
+故 \((\rho,\varphi,\theta)\) 是正交曲线坐标，且
+\[
+\left|\frac{\partial(x,y,z)}{\partial(\rho,\varphi,\theta)}\right|
+=h_\rho h_\varphi h_\theta=\rho^2\sin\varphi ,
+\]
+从而
+\[
+\mathrm{d}V=\rho^2\sin\varphi\,\mathrm{d}\rho\,\mathrm{d}\varphi\,\mathrm{d}\theta,\qquad
+\mathrm{d}s^2=\mathrm{d}\rho^2+\rho^2\mathrm{d}\varphi^2+\rho^2\sin^2\varphi\,\mathrm{d}\theta^2 .
+\]
+\end{example}
+
+\begin{remark}[几何直观与奇点]
+\(\det J_\Phi=h_\rho h_\varphi h_\theta=\rho^2\sin\varphi\) 在两处为零：\(\rho=0\)（原点）与 \(\varphi=0,\pi\)（\(z\) 轴）。原因并非计算失误，而是坐标变换在这些点\emph{退化为非单射}——\(z\) 轴上任意 \(\theta\) 给出同一个点，原点处 \(\varphi,\theta\) 都失去意义。这正说明雅可比行列式为零处映射不能局部可逆，也提示在这些点附近不能随意使用该坐标变换；例如积分时需避开或单独处理坐标轴的零测集。
+\end{remark}
+
+\begin{example}[非正交的例子：斜角坐标]
+取
+\[
+x=u+v,\qquad y=v\qquad(u,v\in\R),
+\]
+则 \(\Phi_u=(1,0)\)，\(\Phi_v=(1,1)\)，\(\left|\Phi_u\right|=1\)，\(\left|\Phi_v\right|=\sqrt2\)，但 \(\Phi_u\cdot\Phi_v=1\ne0\)，故坐标不正交。此时
+\[
+\left|\det J_\Phi\right|=\left|\det\begin{pmatrix}1&1\\0&1\end{pmatrix}\right|=1,
+\qquad\text{而}\qquad h_uh_v=1\cdot\sqrt2=\sqrt2 .
+\]
+两者不相等，可见定理“\(\left|\det J\right|=h_uh_vh_w\)”中\emph{正交性是不可去掉的前提}。此时真实的面积元仍由 \(\left|\det J\right|\mathrm{d}u\,\mathrm{d}v=\mathrm{d}u\,\mathrm{d}v\) 给出，而“\(h_uh_v\mathrm{d}u\,\mathrm{d}v\)”则会高估。
+\end{example}
+
+\subsubsection{用处（一）：重积分换元与几何量计算}
+
+\begin{theorem}[重积分换元公式]
+设 \(\Phi:\Omega\to\R^n\) 是 \(\mathcal C^1\) 的单射，\(\det J_\Phi\) 在 \(\Omega\) 内几乎处处不为零，\(D\subseteq\Omega\) 可求体积，\(f\) 在 \(\Phi(D)\) 上可积。则
+\[
+\int_{\Phi(D)}f(\mathbf{x})\,\mathrm{d}\mathbf{x}
+=\int_D f\bigl(\Phi(\mathbf{u})\bigr)\left|\det J_\Phi(\mathbf{u})\right|\,\mathrm{d}\mathbf{u}.
+\]
+在正交曲线坐标下即
+\[
+\iiint_{\Phi(D)} f\,\mathrm{d}x\,\mathrm{d}y\,\mathrm{d}z
+=\iiint_{D} f\,h_uh_vh_w\,\mathrm{d}u\,\mathrm{d}v\,\mathrm{d}w .
+\]
+\end{theorem}
+
+因此“记住”极坐标的 \(r\)、柱坐标的 \(r\)、球坐标的 \(\rho^2\sin\varphi\)，本质上只需记住三个拉梅系数；这是把零散公式压缩为一条原理的办法。
+
+\begin{example}[用球坐标计算球体体积]
+取单位球 \(B=\{(x,y,z):x^2+y^2+z^2\le1\}\)，对应 \(\rho\in[0,1]\)，\(\varphi\in[0,\pi]\)，\(\theta\in[0,2\pi]\)：
+\[
+V=\iiint_B\mathrm{d}V=\int_0^{2\pi}\!\!\int_0^{\pi}\!\!\int_0^{1}\rho^2\sin\varphi\,\mathrm{d}\rho\,\mathrm{d}\varphi\,\mathrm{d}\theta
+=2\pi\cdot\Bigl[-\cos\varphi\Bigr]_0^{\pi}\cdot\frac13
+=2\pi\cdot2\cdot\frac13=\frac{4\pi}{3}.
+\]
+\end{example}
+
+\begin{example}[球面上方的积分]
+计算 \(I=\displaystyle\iiint_{\Omega} z\,\mathrm{d}x\,\mathrm{d}y\,\mathrm{d}z\)，其中 \(\Omega\) 是上半单位球 \(x^2+y^2+z^2\le1,\ z\ge0\)。用球坐标，\(z=\rho\cos\varphi\)，\(\varphi\in[0,\pi/2]\)：
+\[
+I=\int_0^{2\pi}\!\!\int_0^{\pi/2}\!\!\int_0^1 \rho\cos\varphi\cdot\rho^2\sin\varphi\,\mathrm{d}\rho\,\mathrm{d}\varphi\,\mathrm{d}\theta
+=2\pi\cdot\int_0^1\rho^3\mathrm{d}\rho\cdot\int_0^{\pi/2}\sin\varphi\cos\varphi\,\mathrm{d}\varphi
+=2\pi\cdot\frac14\cdot\frac12=\frac{\pi}{4}.
+\]
+\end{example}
+
+\subsubsection{用处（二）：梯度、散度、旋度与拉普拉斯算子}
+
+在正交曲线坐标下，用局部标架 \((\mathbf e_u,\mathbf e_v,\mathbf e_w)\) 表示向量场 \(F=F_u\mathbf e_u+F_v\mathbf e_v+F_w\mathbf e_w\)。以下公式中 \(h_u,h_v,h_w\) 均为拉梅系数。
+
+\begin{theorem}[微分算子的一般公式]
+设 \((u,v,w)\) 为正交曲线坐标，\(f\) 为数量场（\(\mathcal C^1\)），\(F\) 为向量场（\(\mathcal C^1\)），则
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{梯度}
+  \[
+  \nabla f=\frac{1}{h_u}\frac{\partial f}{\partial u}\mathbf e_u
+  +\frac{1}{h_v}\frac{\partial f}{\partial v}\mathbf e_v
+  +\frac{1}{h_w}\frac{\partial f}{\partial w}\mathbf e_w ;
+  \]
+  \item \textbf{散度}
+  \[
+  \nabla\cdot F=\frac{1}{h_uh_vh_w}\left[
+  \frac{\partial}{\partial u}\bigl(h_vh_wF_u\bigr)
+  +\frac{\partial}{\partial v}\bigl(h_wh_uF_v\bigr)
+  +\frac{\partial}{\partial w}\bigl(h_uh_vF_w\bigr)\right];
+  \]
+  \item \textbf{旋度}
+  \[
+  \nabla\times F=\frac{1}{h_uh_vh_w}
+  \begin{vmatrix}
+  h_u\mathbf e_u & h_v\mathbf e_v & h_w\mathbf e_w\\[3pt]
+  \dfrac{\partial}{\partial u} & \dfrac{\partial}{\partial v} & \dfrac{\partial}{\partial w}\\[6pt]
+  h_uF_u & h_vF_v & h_wF_w
+  \end{vmatrix};
+  \]
+  \item \textbf{拉普拉斯算子}
+  \[
+  \Delta f=\nabla\cdot(\nabla f)
+  =\frac{1}{h_uh_vh_w}\left[
+  \frac{\partial}{\partial u}\!\left(\frac{h_vh_w}{h_u}\frac{\partial f}{\partial u}\right)
+  +\frac{\partial}{\partial v}\!\left(\frac{h_wh_u}{h_v}\frac{\partial f}{\partial v}\right)
+  +\frac{\partial}{\partial w}\!\left(\frac{h_uh_v}{h_w}\frac{\partial f}{\partial w}\right)\right].
+  \]
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+(1) 设 \(\nabla f=\alpha\mathbf e_u+\beta\mathbf e_v+\gamma\mathbf e_w\)。沿 \(u\)-曲线，弧长参数满足 \(\mathrm{d}s=h_u\mathrm{d}u\)，方向导数为
+\[
+\frac{\partial f}{\partial u}=\nabla f\cdot\Phi_u=\nabla f\cdot h_u\mathbf e_u=h_u\alpha ,
+\]
+故 \(\alpha=\dfrac1{h_u}\dfrac{\partial f}{\partial u}\)，其余同理。
+
+(2) 记 \(F_u=h_u\tilde F_u\) 等。由乘积法则，\(\dfrac{\partial}{\partial u}\bigl(h_vh_wF_u\bigr)\) 中的“\(h_vh_wF_u\)”恰为向量 \(F_u\mathbf e_u\) 在坐标曲面上的通量系数，其原理是把散度写成“无穷小控制体上的通量/体积”的极限。严格做法：对任一由坐标曲面围成的小曲边盒 \(B\) 用高斯公式，\(\nabla\cdot F=\lim\frac{1}{\mathrm{vol}\,B}\oiint_{\partial B}F\cdot\mathrm{d}\mathbf S\)，逐对面计算通量并令 \(\mathrm{d}u,\mathrm{d}v,\mathrm{d}w\to0\) 即得。这里给出更直接的验证思路：在直角坐标里 \(\nabla\cdot F=\partial_xF_x+\partial_yF_y+\partial_zF_z\)，通过链式法则把 \(\partial_x,\partial_y,\partial_z\) 换成 \(\partial_u,\partial_v,\partial_w\) 并整理，亦可得到同一结果；正规教材（如菲赫金哥尔茨《微积分学教程》）通常采用前一种“控制体”证明。
+
+(3) 按行列式的展开定义逐分量验证。以 \(w\) 分量为 \(\mathbf e_w\) 的系数为例，展开第三行得
+\[
+\frac{1}{h_uh_vh_w}\left[\frac{\partial}{\partial u}\bigl(h_vF_v\bigr)-\frac{\partial}{\partial v}\bigl(h_uF_u\bigr)\right]\mathbf e_w ,
+\]
+其余分量同理轮换。可直接用斯托克斯公式在一个由坐标曲线围成的小回路 \(C\) 上验证：\((\nabla\times F)_w=\lim\frac{1}{\text{面积}}\oint_CF\cdot\mathrm{d}\mathbf r\)，代入 \(\mathrm{d}\mathbf r=h_u\mathrm{d}u\,\mathbf e_u+h_v\mathrm{d}v\,\mathbf e_v\) 并取极限即得。
+
+(4) 把 (1) 中 \(\nabla f\) 的分量作为 \(F\) 的分量代入 (2)：
+\[
+F_u=\frac1{h_u}\frac{\partial f}{\partial u},\quad
+F_v=\frac1{h_v}\frac{\partial f}{\partial v},\quad
+F_w=\frac1{h_w}\frac{\partial f}{\partial w},
+\]
+则 \(h_vh_wF_u=\dfrac{h_vh_w}{h_u}\dfrac{\partial f}{\partial u}\)，其余两项同理，即得结论。
+\end{proof}
+
+\begin{example}[极坐标下的算子]
+\(h_r=1,\ h_\theta=r,\ h_rh_\theta=r\)：
+\[
+\nabla f=\frac{\partial f}{\partial r}\mathbf e_r+\frac1r\frac{\partial f}{\partial\theta}\mathbf e_\theta,\qquad
+\Delta f=\frac1r\frac{\partial}{\partial r}\!\left(r\frac{\partial f}{\partial r}\right)+\frac{1}{r^2}\frac{\partial^2 f}{\partial\theta^2} .
+\]
+例如 \(f=\ln r\) 是平面调和函数：\(\dfrac1r\dfrac{\partial}{\partial r}\left(r\cdot\dfrac1r\right)=0\)，而 \(\partial_\theta^2\ln r=0\)，故 \(\Delta\ln r=0\)（在 \(r>0\) 上）。
+\end{example}
+
+\begin{example}[球坐标下的拉普拉斯算子]
+代入 \(h_\rho=1,\ h_\varphi=\rho,\ h_\theta=\rho\sin\varphi\)，则 \(h_\rho h_\varphi h_\theta=\rho^2\sin\varphi\)，
+\[
+\Delta f=\frac{1}{\rho^2}\frac{\partial}{\partial\rho}\!\left(\rho^2\frac{\partial f}{\partial\rho}\right)
++\frac{1}{\rho^2\sin\varphi}\frac{\partial}{\partial\varphi}\!\left(\sin\varphi\frac{\partial f}{\partial\varphi}\right)
++\frac{1}{\rho^2\sin^2\varphi}\frac{\partial^2 f}{\partial\theta^2} .
+\]
+取径向对称函数 \(f(\rho)\)，则后两项为零，\(\Delta f=\dfrac{1}{\rho^2}\dfrac{\mathrm{d}}{\mathrm{d}\rho}\!\left(\rho^2f'\right)\)。令 \(\Delta f=0\) 得
+\[
+\frac{\mathrm{d}}{\mathrm{d}\rho}\bigl(\rho^2f'\bigr)=0
+\ \Longrightarrow\ f'=\frac{C}{\rho^2}
+\ \Longrightarrow\ f=-\frac{C}{\rho}+D .
+\]
+这正是牛顿引力势与库仑势 \(1/\rho\) 的来源：\emph{\(\Delta(1/\rho)=0\) 在 \(\rho>0\) 上成立，且这一结论就是球坐标下拉普拉斯方程的直接推论}。此外，由 \(\Delta f=0\) 的径向解除以 \(\rho^2\) 后可得 \(\rho^2f''+2\rho f'=0\)，即 \(f\) 满足欧拉方程，与直接验证 \((\rho^2f')'=0\) 一致。
+\end{example}
+
+\begin{example}[热传导方程在柱坐标下的形式]
+在柱坐标 \((r,\theta,z)\) 中 \(h_r=1,h_\theta=r,h_z=1\)，故
+\[
+u_t=a^2\Delta u
+=a^2\left[\frac1r\frac{\partial}{\partial r}\!\left(r u_r\right)+\frac{1}{r^2}u_{\theta\theta}+u_{zz}\right].
+\]
+含圆柱对称性的定解问题（如长圆柱内的温度分布）由此化为只含 \(r\) 与 \(t\) 的方程。
+\end{example}
+
+\begin{remark}[物理意义]
+梯度公式 \(\nabla f=\sum_i\frac1{h_i}\frac{\partial f}{\partial u_i}\mathbf e_i\) 说明：坐标增量 \(\mathrm{d}u_i\) 引起的函数增量为 \(\frac{\partial f}{\partial u_i}\mathrm{d}u_i\)，而它对应的真实位移是 \(h_i\mathrm{d}u_i\)，故变化率为 \(\frac{1}{h_i}\frac{\partial f}{\partial u_i}\)。散度公式中的系数 \(h_vh_w\) 则是坐标曲面微元的“面积尺度”，体积元 \(h_uh_vh_w\) 则是“体积尺度”。凡是把 \(\nabla,\nabla\cdot,\nabla\times,\Delta\) 写进非直角坐标的场合，都只是在把“每单位坐标变化”换算成“每单位真实长度/面积/体积”。
+\end{remark}
+
+\subsubsection{用处（三）：更广泛的意义}
+
+\begin{enumerate}[label=(\arabic*)]
+  \item \textbf{内蕴几何与张量分析。} 曲线坐标下的度规 \(g_{ij}\) 决定全部几何量：弧长、夹角、面积、体积。拉梅系数 \(h_i=\sqrt{g_{ii}}\)（正交时）是构造正交标架、正交展开（如分离变量求偏微分方程的解）的基础；而雅可比矩阵则是切映射 \(T\Phi\) 的表示，属于“映射”一侧的信息。两者通过 \(J^{\mathsf T}J\) 相联系：
+  \[
+  g=J^{\mathsf T}J,\qquad \sqrt{\det g}=\left|\det J\right| .
+  \]
+  \item \textbf{变量替换与数值积分。} 雅可比行列式是所有换元积分、概率论中随机变量密度变换公式
+  \[
+  f_{U}(\mathbf u)=f_X\bigl(\Phi(\mathbf u)\bigr)\left|\det J_\Phi(\mathbf u)\right|
+  \]
+  的核心；正交曲线坐标下则简化为乘以 \(h_1h_2h_3\)（若 \(\Phi\) 右手）。
+  \item \textbf{连续介质力学与弹性力学。} 拉梅系数（Lamé parameters \(\lambda,\mu\)）与本节讨论的拉梅系数（Lamé coefficients）同名但含义不同，需注意区分：前者是各向同性弹性本构关系中的两个材料常数，后者是正交曲线坐标的尺度因子。二者同出于法国数学家 G.\ Lamé，但属于不同分支的概念。在曲线坐标下书写弹性力学、流体力学方程（如纳维--斯托克斯方程在球坐标下的形式）时，用的正是本节的 \(h_i\)。
+  \item \textbf{坐标系的选择策略。} 当区域或方程具有对称性时，选一组使 \(h_i\) 尽可能简单、且边界与坐标曲面重合的坐标，往往把偏微分方程化为可分离变量的常微分方程组。球坐标之于氢原子薛定谔方程、柱坐标之于圆管流动、椭圆坐标之于带椭圆孔的平面问题，都是这一策略的实例。此时拉梅系数直接给出方程中各项的系数，雅可比行列式则给出积分归一化所需的权重。
+\end{enumerate}
+
+\subsubsection{小结}
+
+\begin{center}
+\renewcommand{\arraystretch}{1.35}
+\begin{tabular}{lll}
+\hline
+坐标系 & 拉梅系数 \((h_1,h_2,h_3)\) & \(\left|\det J\right|=h_1h_2h_3\)\\
+\hline
+直角坐标 \((x,y,z)\) & \((1,1,1)\) & \(1\)\\
+极坐标 \((r,\theta)\) & \((1,r)\) & \(r\)\\
+柱坐标 \((r,\theta,z)\) & \((1,r,1)\) & \(r\)\\
+球坐标 \((\rho,\varphi,\theta)\) & \((1,\rho,\rho\sin\varphi)\) & \(\rho^2\sin\varphi\)\\
+\hline
+\end{tabular}
+\end{center}
+
+\noindent 一句话概括：\textbf{雅可比行列式回答“换元时体积要乘多少”，拉梅系数回答“每个坐标方向的实际长度是多少”；在正交曲线坐标下，前者恰是后者三个因子之积。}由此，重积分换元、\(\mathrm{d}s^2\)、\(\nabla f\)、\(\nabla\cdot F\)、\(\nabla\times F\)、\(\Delta f\) 的所有公式都能由 \(h_1,h_2,h_3\) 统一写出，无须逐条记忆。
