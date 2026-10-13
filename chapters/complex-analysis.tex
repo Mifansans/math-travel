@@ -725,3 +725,404 @@ $\dfrac{\partial h}{\partial y}=i\dfrac{\partial h}{\partial x}$。
 \caption{手稿原稿：链式法则（2026 年 10 月 11 日）}\label{fig:chain-ms}
 \end{figure}
 \fi
+
+\subsection{收敛圆周上的收敛性：$\sum z^n/n$ 在 $|z|=1$ 上除 $z=1$ 处处收敛}
+\label{sec:circle-convergence}
+
+\noindent\textbf{题目（习题 (c)）．}
+证明：幂级数 $\displaystyle\sum_{n\ge1}\frac{z^n}{n}$ 在单位圆周 $|z|=1$ 上除 $z=1$ 外处处收敛。
+\hfill{\small [提示：分部求和（sum by parts）。]}
+
+\medskip
+\noindent
+本节按"面对这类题该从哪里想"的顺序写：先把问题定性（\S\ref{sec:circle-nature}），
+再把技术骨架抽成一条与本题无关的引理（\S\ref{sec:abel-lemma}），最后回到本题（\S\ref{sec:circle-apply}）。
+
+\subsubsection*{1. 先定性：这不是"估值"问题，是"求和"问题}
+\label{sec:circle-nature}
+
+在 $|z|<1$ 内这个级数\emph{绝对}收敛（$\sum|z|^n/n$ 收敛，用比值或根值判别法都行，收敛半径 $R=1$）。
+到了收敛圆周上，"取绝对值"这条路就走到头了：$|z|=1$ 时
+\[
+\Bigl|\frac{z^n}{n}\Bigr|=\frac1n,
+\qquad
+\sum_{n\ge1}\frac1n=+\infty,
+\]
+所以级数在圆周上\emph{不可能}绝对收敛。更糟的是不能逐个点用 Weierstrass 判别法，
+也不能在圆周上逐项积分（逐项积分要求一致收敛，而 $|z|=1$ 上一般没有一致收敛，见 \S\ref{sec:circle-apply} 注 \ref{rem:abel-nonuniform}）。
+
+于是只剩一种可能：级数是\emph{条件收敛}的，靠"正负相消"收敛。
+凡是这种局面，判断依据就不能是单项的大小 $\bigl|\frac{z^n}{n}\bigr|$，
+而必须是\textbf{累积和}的大小。这一步心理转变是本题的全部难点：
+
+\begin{center}
+\emph{不研究 $\dfrac{z^n}{n}$，改研究 $A_N=z+z^2+\cdots+z^N$。}
+\end{center}
+
+$z^n$ 在圆周上绕圈，它的部分和 $A_N$ \emph{振荡但不跑远}（几何级数的部分和有闭式），
+而因子 $1/n$ \emph{单调地、缓慢地}衰减。
+"一个振荡有界的东西乘上一个单调衰减到 $0$ 的权重"——这类级数收敛是一条普适的定理，
+而它正是用\textbf{分部求和}（Abel 求和）证明的。这就是提示里那四个字的来处。
+
+\subsubsection*{2. 把技术骨架抽出来：一条 Abel 求和引理}
+\label{sec:abel-lemma}
+
+先在\emph{与本题无关}的一般情形下把工具磨好：一旦工具是"关于有界部分和与单调权重"的陈述，
+它在别处（Fourier 级数的 Dirichlet 判别法、$\sum a_ne^{inx}$、交错级数）都能复用。
+记号约定：空和为 $0$；$A_N=\sum_{n=1}^{N}c_n$。
+
+\begin{proposition}[离散分部求和公式（Abel 变换）]\label{prop:abel-transform}
+设 $\{c_n\}$、$\{w_n\}$ 是复数数列，$A_N=c_1+\cdots+c_N$（$A_0=0$）。则对 $1\le M<N$，
+\begin{equation}\label{eq:abel}
+\sum_{n=M}^{N}c_nw_n
+=A_Nw_N-A_{M-1}w_M-\sum_{n=M}^{N-1}A_n\,(w_{n+1}-w_n).
+\end{equation}
+这是唯一"合适"的写法：右边只用到 $w_M,\dots,w_N$。
+（若把差分方向写成 $w_n-w_{n+1}$，则不管求和补到 $N-1$ 还是 $N$ 都不再成立——
+这一项的方向是"配套"的，不能单独翻。这正是本节最容易写错的一步，
+所以下面证明里每一步的下标都写全。）
+（$w_n\equiv1$ 时它就是 $\sum c_n=A_N$；$c_n\equiv1$ 时 $A_n=n$，于是它就是通常的分部求和
+\[
+\sum_{n=M}^Nw_n=Nw_N-(M-1)w_M-\sum_{n=M}^{N-1}n\,(w_{n+1}-w_n),
+\]
+两边同号移项即经典分部积分公式的离散版。）
+\end{proposition}
+
+\begin{proof}
+\emph{（一）先证 $c_nw_n=A_nw_n-A_{n-1}w_n$。}由 $A_n=A_{n-1}+c_n$ 得
+$c_n=A_n-A_{n-1}$，两边乘 $w_n$ 即得。
+
+\emph{（二）再凑一个望远镜。}把上面这条代入并"加一项减一项"：
+\[
+c_nw_n=A_nw_n-A_{n-1}w_{n}=A_nw_n-A_{n-1}w_{n-1}-A_{n-1}(w_n-w_{n-1}),
+\]
+（右边 $=A_nw_n-A_{n-1}w_n$，因为 $-A_{n-1}w_{n-1}-A_{n-1}w_n+A_{n-1}w_{n-1}$ 相消）。
+对 $n=M,\dots,N$ 求和：$\sum_{n=M}^N\bigl(A_nw_n-A_{n-1}w_{n-1}\bigr)=A_Nw_N-A_{M-1}w_{M-1}$，
+于是
+\[
+\sum_{n=M}^Nc_nw_n=A_Nw_N-A_{M-1}w_{M-1}-\sum_{n=M}^NA_{n-1}(w_n-w_{n-1}).
+\]
+把右端的求和下标平移一位（$n-1\mapsto n$，即
+$\sum_{n=M}^{N}A_{n-1}(w_n-w_{n-1})=\sum_{n=M-1}^{N-1}A_n(w_{n+1}-w_n)$，
+其中 $n=M-1$ 那项是 $A_{M-1}(w_M-w_{M-1})$，$n=N-1$ 那项是 $A_{N-1}(w_N-w_{N-1})$）：
+\[
+\begin{aligned}
+\sum_{n=M}^{N}c_nw_n
+&=A_Nw_N-A_{M-1}w_{M-1}-A_{M-1}(w_M-w_{M-1})-\sum_{n=M}^{N-1}A_n(w_{n+1}-w_n)\\
+&=A_Nw_N-A_{M-1}w_{M-1}-A_{M-1}w_M+A_{M-1}w_{M-1}-\sum_{n=M}^{N-1}A_n(w_{n+1}-w_n)\\
+&=A_Nw_N-A_{M-1}w_M-\sum_{n=M}^{N-1}A_n(w_{n+1}-w_n),
+\end{aligned}
+\]
+即 \eqref{eq:abel}。
+\end{proof}
+
+\begin{corollary}[Abel 判别法 / Dirichlet 判别法]\label{cor:dirichlet}
+设 $\{c_n\}$、$\{w_n\}$ 满足：
+\begin{enumerate}[label=(\roman*), leftmargin=2.4em]
+\item \textbf{部分和有界}：存在 $M_0>0$，使对一切 $N$ 有 $|A_N|=\Bigl|\sum_{n=1}^Nc_n\Bigr|\le M_0$；
+\item \textbf{权重单调递减趋于零}：$w_1\ge w_2\ge\cdots\ge0$ 且 $w_n\to0$；
+\end{enumerate}
+则 $\sum_{n\ge1}c_nw_n$ 收敛。若 $\{w_n\}$ 还只依赖于 $n$（与 $z$ 无关），
+则收敛在使 (i) 中的 $M_0$ 一致的任何集合上一致。
+（注意结论只是收敛：由它推不出 $\sum|c_n|w_n<\infty$，本题正是这种情形。）
+\end{corollary}
+
+\begin{proof}
+用 Cauchy 判别法。对 $1\le M<N$，由 \eqref{eq:abel}（并用 $|A_{M-1}|\le M_0$、$|A_N|\le M_0$、
+$w_n-w_{n+1}\ge0$、$\sum_{n=M}^{N-1}(w_n-w_{n+1})=w_M-w_N$）：
+\[
+\Bigl|\sum_{n=M}^{N}c_nw_n\Bigr|
+\le M_0w_N+M_0w_M+M_0\,(w_M-w_N)
+=2M_0w_M .
+\]
+右边与 $N$ 无关（$N$ 只出现在被消掉的那部分里），$M=N$ 时取空和也为 $0\le2M_0w_M$，
+故对一切 $1\le M\le N$ 成立。
+又 $w_M\to0$，故任给 $\varepsilon>0$，取 $M$ 充分大即得左端 $<\varepsilon$，
+且这个 $M$ 只通过 $w_M$ 与 $M_0$ 起作用，与 $z$ 无关时便一致。
+（若 (i) 对某个集合一致、(ii) 与参数无关，则上述 $M$ 对该集合统一，即一致收敛。）
+\end{proof}
+
+\noindent
+三个伏笔：第一，证明里从来没有估计单项 $|c_nw_n|$，只用到"$A_N$ 有界"与"$w_n$ 单调"，
+这正是条件收敛的典型机制；第二，结尾那个 $w_M$ 会成为本题的误差尺度；
+第三，把 $w_n$ 具体取成 $1/n$ 就得到本题，下面就直接这么用。
+
+\subsubsection*{3. 回到本题：把 $z^n$ 的部分和算出来}
+\label{sec:circle-apply}
+
+\begin{proposition}\label{prop:circle}
+设 $|z|=1$，$z\ne1$。则 $\displaystyle\sum_{n\ge1}\frac{z^n}{n}$ 收敛，
+并且对每个 $M\ge1$ 有 $\displaystyle\Bigl|\sum_{n=M}^{\infty}\frac{z^n}{n}\Bigr|\le\frac{4}{|1-z|\,M}$，
+从而在 $\{|z|=1,\ |z-1|\ge\delta\}$ 上一致收敛。
+\end{proposition}
+
+\begin{proof}
+\emph{（1）部分和的闭式。}对 $z\ne1$，由 $(1-z)(1+z+\cdots+z^{N-1})=1-z^{N}$ 得
+\begin{equation}\label{eq:geom-partial}
+1+z+\cdots+z^{N-1}=\frac{1-z^{N}}{1-z},
+\qquad\text{故}\qquad
+A_N=z+z^2+\cdots+z^{N}=\frac{z\,(1-z^{N})}{1-z},
+\end{equation}
+即 $A_N=\dfrac{z-z^{N+1}}{1-z}$。于是（只用 $|z|=1$）
+\begin{equation}\label{eq:geom-bound}
+|A_N|=\frac{|z-z^{N+1}|}{|1-z|}\le\frac{|z|+|z|^{N+1}}{|1-z|}
+=\frac1{|1-z|}+\frac1{|1-z|}=\frac{2}{|1-z|}.
+\end{equation}
+取 $M_0=\dfrac{2}{|1-z|}$，这是与 $N$ 无关的有界量。到这一步，"$z\ne1$"这个条件终于被用上了：
+$|1-z|>0$ 才能把分母除下来。
+
+\emph{（2）套引理。}取 $c_n=z^n$（于是 $A_N$ 就是 \eqref{eq:geom-partial} 的那个），
+取 $w_n=\dfrac1n$。$w_n$ 显然单调递减且趋于 $0$。
+由推论 \ref{cor:dirichlet}（或直接把命题 \ref{prop:abel-transform} 用在 Cauchy 差上），级数收敛。
+
+\emph{（3）把界算出来（顺手换一个更清楚的写法）。}用命题 \ref{prop:abel-transform}，$w_n=\frac1n$，
+$w_n-w_{n+1}=\frac{1}{n}-\frac{1}{n+1}=\frac{1}{n(n+1)}$：
+\[
+\sum_{n=M}^{N}\frac{z^n}{n}
+=\frac{A_N}{N}-\frac{A_{M-1}}{M}+\sum_{n=M}^{N-1}A_n\Bigl(\frac1n-\frac1{n+1}\Bigr),
+\]
+再对 $n\ge M$ 用估计 \eqref{eq:geom-bound} 中的 $|A_n|\le\dfrac{2}{|1-z|}$：
+\[
+\Bigl|\sum_{n=M}^{N}\frac{z^n}{n}\Bigr|
+\le\frac{2}{|1-z|}\Bigl(\frac1N+\frac1M+\sum_{n=M}^{N-1}\frac{1}{n(n+1)}\Bigr)
+=\frac{2}{|1-z|}\Bigl(\frac1N+\frac1M+\frac1M-\frac1N\Bigr)
+=\frac{4}{|1-z|\,M},
+\]
+其中用了 $\sum_{n=M}^{N-1}\bigl(\frac1n-\frac1{n+1}\bigr)=\frac1M-\frac1N$。
+令 $N\to\infty$ 得尾巴估计
+\begin{equation}\label{eq:tail-bound}
+\Bigl|\sum_{n=M}^{\infty}\frac{z^n}{n}\Bigr|\le\frac{4}{|1-z|\,M}.
+\end{equation}
+（误差尺度恰好是引理证明末尾那个 $w_M=1/M$，与伏笔一致。）
+
+\emph{（4）一致收敛。}在集合 $\{|z|=1,\ |z-1|\ge\delta\}$ 上 $|1-z|\ge\delta$，
+故误差 $\le\dfrac{4}{\delta M}$ 与 $z$ 无关，取 $M$ 充分大即可。
+\end{proof}
+
+\noindent
+把整个解压成一句话：
+\begin{center}
+\emph{$z^n$ 的部分和被 $\dfrac{2}{|1-z|}$ 一致控制住，$1/n$ 单调递减趋于 $0$，
+于是由 Abel（Dirichlet）判别法级数收敛；误差是 $O(1/M)$。}
+\end{center}
+
+\begin{remark}[原题为什么排除了 $z=1$，而且只排除它]\label{rem:why-z1}
+两点都要交代清楚。
+\begin{enumerate}[label=(\arabic*), leftmargin=2.2em]
+\item \textbf{$z=1$ 处确实发散。}此时级数是调和级数 $\sum 1/n=+\infty$，
+部分和 $A_N=N$ 无界，估计 \eqref{eq:geom-bound} 失效——它的右端 $\dfrac{2}{|1-z|}$ 在 $z\to1$ 时爆破，
+恰好把"$1$ 是唯一坏点"这件事写在了公式里。所以这不是题目的技术性排除，而是真结论。
+\item \textbf{其余点都收敛。}$|z|=1,\ z\ne1$ 时 $|1-z|$ 是正的常数，\eqref{eq:tail-bound} 给出收敛。
+特别地：$z=-1$ 时级数是 $-\sum(-1)^{n-1}/n=-\ln2$，是交错调和级数，中学就见过；
+$z=e^{2\pi i/3}$ 时 $1+z+z^2=0$，部分和每三步回到 $0$，有界得更明显。
+\item \textbf{边界的"疏密"无关紧要。}单位圆周上的点要么就是 $1$，要么不是 $1$；
+"不是 $1$"这一条与 $z$ 离 $1$ 多近无关，所以收敛是\emph{逐点}的，
+整个圆周挖去一点 $|z|=1\setminus\{1\}$ 上处处收敛。但要注意下面的注 \ref{rem:abel-nonuniform}。
+\end{enumerate}
+\end{remark}
+
+\begin{remark}[两个容易踩的坑]\label{rem:abel-nonuniform}
+\begin{enumerate}[label=(\arabic*), leftmargin=2.2em]
+\item \textbf{收敛不是一致的。}误差 \eqref{eq:tail-bound} 里的 $\dfrac{1}{|1-z|}$ 在 $z\to1$ 时无界，
+故在整个 $|z|=1\setminus\{1\}$ 上\emph{不}一致收敛；
+和函数 $f(z)=\sum_{n\ge1}\frac{z^n}{n}$ 在 $z\to1$ 时无界，
+而一致收敛的连续函数列不可能有这样的行为。
+一致收敛只在"挖掉 $1$ 的小邻域"之后成立，即 $|1-z|\ge\delta$。
+\item \textbf{不能逐项积分。}圆周上 $|z|=1$，若把 $\dfrac1z$ 也乘进去做逐项积分
+\[
+\sum_{n\ge1}\frac1n\oint_{|z|=1}z^{n-1}\,dz ,
+\]
+每一步的 $\oint_{|z|=1}z^{n-1}dz=0$ 单独看没错，
+但"逐项积分"需要一致收敛（本题没有），所以不能由它推出和为 $0$ 之类的结论。
+这类"先积分再说"的操作在收敛圆周上是最常见的错误来源。
+\item \textbf{和函数是什么（Abel 定理，此处只记结论）。}在 $|z|<1$ 内
+$\sum_{n\ge1}\frac{z^n}{n}=-\log(1-z)$（把 $\frac{1}{1-z}=\sum z^n$ 逐项积分）。
+由 Abel 极限定理，在 $|z|=1,\ z\ne1$ 处 $\sum_{n\ge1}\frac{z^n}{n}=-\operatorname{Log}(1-z)$
+（$\operatorname{Log}$ 取主支；$z\to1$ 沿实轴时 $-\operatorname{Log}(1-z)\to+\infty$，
+与 $z=1$ 处发散相容）。
+\end{enumerate}
+\end{remark}
+
+\begin{remark}[条件收敛 vs.\ 绝对收敛：判断依据的替换]\label{rem:cond-vs-abs}
+本题的真正教益是\textbf{条件收敛题一律先找"累积和"}。可以做成一张"触发条件 $\to$ 该想到什么"的表：
+
+\medskip
+\noindent
+记 $A_N=c_1+\cdots+c_N$（\emph{累积和}，即部分和）。
+\begin{enumerate}[label=(\arabic*), leftmargin=2.2em]
+\item 看到 $\sum c_nw_n$，而 $|c_n|$ 不衰减（如 $|c_n|=1$）：
+绝对收敛无望，改看 $A_N$——只要 $A_N$ 有界、$w_n$ 单调递减趋于 $0$，级数就收敛。
+\item 看到 $c_n=z^n$、$|z|=1$：先算几何和闭式 $(1-z)A_N=?$，得到 $|A_N|\le\dfrac{2}{|1-z|}$。
+\item 看到 $c_n=e^{inx}$（三角级数）：同一套，$|\sum_{n\le N}e^{inx}|\le\dfrac{1}{|\sin(x/2)|}$，
+由此得 $\sum\dfrac{\cos nx}{n}$、$\sum\dfrac{\sin nx}{n}$ 的收敛（Dirichlet 判别法）。
+\item 看到 $w_n$ 单调递减趋于 $0$ 而 $\sum w_n=\infty$：收敛是可能的，但只能是\emph{条件}收敛，
+误差尺度通常是 $w_M$；此时不许用一致收敛的定理。
+\item 想用一致收敛、逐项积分、逐项求导：先检查参数在紧集上是否\emph{远离坏点}
+（本题的坏点是 $1$，好的集合是 $|1-z|\ge\delta$）。
+\end{enumerate}
+\end{remark}
+
+\begin{remark}[与 Stein 教材的位置]\label{rem:stein-loc}
+本题出自 Stein--Shakarchi《复分析》第 3 章"幂级数与亚纯函数"里幂级数那一节的习题
+（"求和"提示所在的题组；据我记是第 16 题，其后的第 17 题要求用 Dirichlet 判别法再证一遍——
+若与书上题号有出入，以书为准）。
+教材把它排在"收敛半径 $=1$、边界上的收敛性必须逐点判断"的语境里，
+所以本题也回答了那个语境下的自然追问：$R=1$ 时边界上到底哪些点收敛？
+答案不是"收敛圆盘开、圆周不确定"这种含糊话，而是\emph{除一点外全部收敛}。
+\end{remark}
+
+\subsection{工具：上下极限的不等式链（比值法与根值法谁更强）}
+\label{sec:limsup-tools}
+
+上一小节的 $z=1$ 用了一次"$|1-z|>0$"；这一小节补另一件被反复忘掉的工具：
+判断收敛半径时，比值法失败而根值法还能用的原因，
+以及陈纪修《数学分析》里那条不等式链它是怎么证的、为什么好记。
+
+\subsubsection*{1. 这条链说的是什么}
+
+它把两个极限过程联系起来：
+"相邻两项之比的极限"与"开 $n$ 次方的极限"。
+在级数里，前者是比值判别法、后者是根值判别法；
+在幂级数里，两者都用来算收敛半径（柯西--哈达玛）。
+
+用一句话记住链的内容：
+
+\begin{center}
+\emph{相邻比值的上下极限，夹住了开 $n$ 次方的上下极限。}
+\end{center}
+
+它为什么该成立？两边都在量"数列的增长率"：
+$\Bigl|\dfrac{a_{n+1}}{a_n}\Bigr|$ 是\emph{逐点的、相邻的}增长率，
+$|a_n|^{1/n}$ 是\emph{把倍数摊平}之后的平均增长率。
+比较两者用的就是"用相邻比估计远处的项"：把 $n-N$ 个不等式连乘，
+再开 $n$ 次方把 $n-N$ 个因子摊到每一步上。整个证明只有这两招。
+
+\subsubsection*{2. 四件必备的极限上下极限事实}
+
+为了不用一遍书，把用得到的都列在这（都在 $\overline\R=[-\infty,+\infty]$ 中取值；
+$a_n\ge0$）：
+\begin{enumerate}[label=(F\arabic*), leftmargin=2.6em]
+\item \textbf{永远存在}：$\limsup a_n$、$\liminf a_n$ 对\emph{任何}实数列都有定义，不像极限会不存在。
+\item \textbf{定义式}：$\displaystyle\limsup_{n\to\infty}a_n=\lim_{N\to\infty}\Bigl(\sup_{n\ge N}a_n\Bigr)
+=\inf_{N\ge1}\Bigl(\sup_{n\ge N}a_n\Bigr)$；$\liminf$ 把 $\sup$ 换成 $\inf$。
+\item \textbf{集合关系}：$\liminf a_n=\inf E$、$\limsup a_n=\sup E$，其中 $E$ 是 $\{a_n\}$ 的一切收敛子列的极限之集。
+\item \textbf{保序}：$a_n\le b_n$（对一切充分大的 $n$）$\Rightarrow$ $\limsup a_n\le\limsup b_n$，$\liminf a_n\le\liminf b_n$。
+\item \textbf{把 $\limsup$ 当"最终上界"用}：$c>\limsup a_n$ $\Rightarrow$ 存在 $N$ 使一切 $n\ge N$ 有 $a_n<c$；
+$c<\liminf a_n$ $\Rightarrow$ 存在 $N$ 使一切 $n\ge N$ 有 $a_n>c$。
+（这一条是下面全部证明的唯一发动机。）
+\item \textbf{与四则运算}：$\limsup(a_n+b_n)\le\limsup a_n+\limsup b_n$（一般取不到等号）；
+$a_n\ge0$ 时 $\limsup(a_nb_n)\le\bigl(\limsup a_n\bigr)\bigl(\limsup b_n\bigr)$。
+\item \textbf{常数不改变}：$c>0$ 时 $\limsup(ca_n)=c\limsup a_n$；$\lim_{n}(a_n)^{1/n}=1$（$a_n\to a>0$ 时）。
+\item \textbf{夹在中间}：$\liminf a_n\le\limsup a_n$；两者相等（有限或同为 $\pm\infty$）$\iff$ 极限存在且等于它。
+\end{enumerate}
+
+\begin{proposition}[上下极限不等式链]\label{prop:limsup-chain}
+设 $a_n>0$（$n\ge1$）。记
+\[
+L=\liminf_{n\to\infty}\frac{a_{n+1}}{a_n},\qquad
+\sigma=\limsup_{n\to\infty}\frac{a_{n+1}}{a_n},\qquad
+\ell=\liminf_{n\to\infty}a_n^{1/n},\qquad
+\tau=\limsup_{n\to\infty}a_n^{1/n}.
+\]
+则
+\begin{equation}\label{eq:limsup-chain}
+L\ \le\ \ell\ \le\ \tau\ \le\ \sigma .
+\end{equation}
+更具体地：链的\emph{左半}是 $L\le\ell$，\emph{右半}是 $\tau\le\sigma$；
+中间的 $\ell\le\tau$ 只是 (F8)。
+\end{proposition}
+
+\begin{proof}
+\textbf{预备（为什么只要证两半）。}
+由 (F8) 立刻有 $\ell\le\tau$；于是剩下 $L\le\ell$ 与 $\tau\le\sigma$ 两半。
+两半的证明是同一个套路，但\textbf{不等式方向的处理方式不同}，所以分开写清楚。
+（两者都可以看成 (F5) 的直接后果，共同点是把"对某个 $c$ 的最终估计"变成"对 $L,\sigma$ 的估计"。）
+
+\medskip
+\noindent\textbf{右半 $\tau\le\sigma$。}
+设 $c$ 是 $\sigma$ 的任一严格上界，即 $c>\sigma=\limsup_n\frac{a_{n+1}}{a_n}$。
+由 (F5)，存在 $N$ 使
+\[
+\frac{a_{n+1}}{a_n}\le c\qquad(n\ge N).
+\]
+\textbf{把 $n-N$ 个不等式连乘}：对 $n>N$，
+\[
+a_n=\frac{a_n}{a_{n-1}}\cdot\frac{a_{n-1}}{a_{n-2}}\cdots\frac{a_{N+1}}{a_N}\cdot a_N\le a_N\,c^{\,n-N}.
+\]
+\textbf{开 $n$ 次方把因子摊平}：
+\[
+a_n^{1/n}\le a_N^{1/n}\,c^{\,1-N/n}=c\cdot\underbrace{a_N^{1/n}}_{\to1}\cdot\underbrace{c^{-N/n}}_{\to1}.
+\]
+由 (F4)（保序）与 (F7)（乘常数、常数开方），
+\[
+\tau=\limsup_{n\to\infty}a_n^{1/n}
+\le\lim_{n\to\infty}\Bigl(c\,a_N^{1/n}c^{-N/n}\Bigr)=c .
+\]
+这对一切 $c>\sigma$ 成立，令 $c\downarrow\sigma$（即对一切 $\sigma$ 的严格上界取下确界）得 $\tau\le\sigma$。
+
+\medskip
+\noindent\textbf{左半 $L\le\ell$。}
+这里要证下极限的不等式，用 (F5) 的"另一半"：设 $c$ 满足 $0<c<L=\liminf_n\frac{a_{n+1}}{a_n}$，
+则存在 $N$ 使
+\[
+\frac{a_{n+1}}{a_n}\ge c\qquad(n\ge N).
+\]
+连乘得 $a_n\ge a_Nc^{\,n-N}$，开 $n$ 次方得
+\[
+a_n^{1/n}\ge c\cdot a_N^{1/n}c^{-N/n}\ \xrightarrow[n\to\infty]{}\ c ,
+\]
+于是 $\ell=\liminf_n a_n^{1/n}\ge c$（用 (F4) 的 $\liminf$ 版本；这里用的是 $c$ 是\emph{下}界这件事，
+与右半用 $c$ 是\emph{上}界是两处不同的假设，不能一句话带过）。
+对一切 $c<L$ 成立，故 $\ell\ge L$，即 $L\le\ell$。
+\end{proof}
+
+\begin{remark}[为什么这里想得到、记不住也推得出]\label{rem:why-chain}
+三个可复用的"想头"：
+\begin{enumerate}[label=(\arabic*), leftmargin=2.2em]
+\item \textbf{把"最终估计"当成唯一的工具。}
+$\limsup$ 的定义就是为了让 (F5) 成立：想控制 $\limsup$ 就取一个严格大的 $c$ 做最终上界，
+想控制 $\liminf$ 就取一个严格小的 $c$ 做最终下界。见到上下极限先想这一条。
+\item \textbf{逐项连乘}:相邻比值的作用是"接着走一步"。
+要把它变成对 $a_n$ 的估计，唯一的办法是连乘 $\dfrac{a_{n}}{a_{n-1}}\cdots\dfrac{a_{N+1}}{a_N}$。
+\item \textbf{开 $n$ 次方是"摊平"}:$c^{\,n-N}$ 里的 $n-N$ 是"乘了 $n-N$ 次"，
+一旦开 $n$ 次方，威力就变成 $c^{1-N/n}\to c$ 和一个趋 $1$ 的修正因子。
+取对数看更透明：$q_n=\frac{a_{n+1}}{a_n}$，$p_n=\ln q_n$ 时
+\[
+\ln a_n^{1/n}=\frac{1}{n}\sum_{k=1}^{n}p_k+O\Bigl(\frac1n\Bigr)
+\]
+就是"前缀算术平均"，而"前缀平均的上下极限夹在 $p_k$ 的上下极限之间"是算术平均的常识
+（陈纪修书里证这条时用"先斩后奏"取对数，讲的就是这件事）。上述连乘 + 开方就是它的"不打对数"版本。
+\end{enumerate}
+\end{remark}
+
+\begin{remark}[判别法之间的关系：根值法严格强于比值法]\label{rem:root-vs-ratio}
+对幂级数 $\sum a_nz^n$，柯西--哈达玛公式说（$0\le R\le+\infty$）
+\[
+\frac1R=\limsup_{n\to\infty}|a_n|^{1/n},
+\]
+（约定 $\frac10=+\infty$、$\frac1{+\infty}=0$；$R$ 就是收敛半径）。
+而链 \eqref{eq:limsup-chain} 表明，只要 $\lim\bigl|\frac{a_{n+1}}{a_n}\bigr|$ 存在，它就等于 $\limsup|a_n|^{1/n}$，
+于是\textbf{比值判别法是根值判别法的特例}；反过来不成立：
+
+\begin{example}\label{ex:ratio-fails}
+取 $a_n=2^{\,n+(-1)^n}$（即 $a_{2k}=2^{2k+1}$、$a_{2k+1}=2^{2k}$），则
+\[
+\frac{a_{n+1}}{a_n}=
+\begin{cases}
+2^{-2} & n\ \text{偶},\\[2pt]
+2^{+2} & n\ \text{奇},
+\end{cases}
+\]
+故 $\sigma=4$、$L=\frac14$，链 \eqref{eq:limsup-chain} 在 $\tau$ 上留出了空隙的余地：实际算得
+\[
+a_n^{1/n}=2^{\,1+(-1)^n/n}\ \longrightarrow\ 2,
+\qquad\text{所以}\qquad
+\frac1R=2,\qquad R=\frac12 .
+\]
+根值法给出 $R=\frac12$；比值法只能说"$\frac14\le\frac1R\le4$"，
+连 $\sum a_nz^n$ 在 $|z|<\frac12$ 内收敛都推不出来——这就是"比值法失败、根值法照样能用"的最简例子。
+\end{example}
+（同一个意思的另一种说法：若 $\{a_n\}$ 的符号频繁变化，$\frac{a_{n+1}}{a_n}$ 会被"变号"搅乱，
+而 $|a_n|^{1/n}$ 把变号"压掉了"，所以后者更稳。）
+
+\end{remark}
