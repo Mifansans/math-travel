@@ -1,0 +1,28 @@
+# 编译产物
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.bbl
+*.blg
+*.xdv
+*.dvi
+out/
+
+# 成品 PDF（由 CI 编译并发 Release，不进版本库）
+/main.pdf
+/diary/diary.pdf
+
+# 编辑器 / 系统文件
+.vscode/
+.DS_Store
+Thumbs.db
+
+# 临时工作区（扫描件、草稿放在仓库外；万一建了也不提交）
+work/
+scratch/
